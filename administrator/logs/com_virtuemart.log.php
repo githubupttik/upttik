@@ -1,0 +1,4 @@
+#
+#<?php die("Forbidden."); ?>
+
+2017-07-07 04:32:20 ERROR vmError: Warning, the Safe Path is empty, for safety reasons it is very important to create a folder in a path not accessible by an URL or unguessable name, create also a folder 'invoices' and 'keys' in it to store your sensitive data secure. Our suggested path is for your system 'C:\xampp\htdocs\vmfiles\'. <br>You can also use complex folder name as 'password' for example 'C:\xampp\htdocs\upttik\administrator\components\com_virtuemart\hgxdSi7KWcOL\'. Use this link to the <a href='http://192.168.6.54/upttik/administrator/index.php?option=com_virtuemart&view=config' >config</a>

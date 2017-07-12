@@ -1,0 +1,160 @@
+.category-view .row .category .spacer{
+	margin:10px;
+	background:#fff;
+	border:1px solid #ddd;
+	box-shadow:1px 2px 8px #eee;
+}
+.category-view .horizontal-separator{ display:none; }
+
+/*----- Buttons Css -----*/
+.control-buttons button,
+span.addtocart-button input.addtocart-button,
+span.addtocart-button input.notify-button,
+div.vm-details-button a,
+.back-to-category a.product-details,
+.manufacturer-product-link a,
+#com-form-login-remember input.default,
+.billto-shipto a.details,
+.vm-button-correct,
+span.details-button input.details-button,
+.vm-button-correct,
+input.highlight-button{
+	font-size:15px;
+	font-weight:bold;
+	text-shadow:none;
+	padding:10px 15px;
+	border-radius:3px;
+	background:#1f2a30;
+	letter-spacing:normal;
+	color:#fff !important;
+	width:auto !important;
+	border:2px solid transparent;
+}
+
+.control-buttons button:hover,
+span.addtocart-button input.addtocart-button:hover,
+span.addtocart-button input.notify-button:hover,
+div.vm-details-button a:hover,
+.back-to-category a.product-details:hover,
+.manufacturer-product-link a:hover,
+#com-form-login-remember input.default:hover,
+.billto-shipto a.details:hover,
+.vm-button-correct:hover,
+span.details-button input.details-button:hover,
+.vm-button-correct:hover,
+input.highlight-button:hover,
+.control-buttons button:active,
+span.addtocart-button input.addtocart-button:active,
+span.addtocart-button input.notify-button:active,
+div.vm-details-button a:active,
+.back-to-category a.product-details:active,
+.manufacturer-product-link a:active,
+#com-form-login-remember input.default:active,
+.billto-shipto a.details:active,
+.vm-button-correct:active,
+span.details-button input.details-button:active,
+.vm-button-correct:active,
+input.highlight-button:active,
+.control-buttons button:focus,
+span.addtocart-button input.addtocart-button:focus,
+span.addtocart-button input.notify-button:focus,
+div.vm-details-button a:focus,
+.back-to-category a.product-details:focus,
+.manufacturer-product-link a:focus,
+#com-form-login-remember input.default:focus,
+.billto-shipto a.details:focus,
+.vm-button-correct:focus,
+span.details-button input.details-button:focus,
+.vm-button-correct:focus,
+input.highlight-button:focus{
+	color:#fff;
+	background:#4C5559;
+	text-decoration:none;
+}
+
+.quantity-box .quantity-input,
+.cart-summary .quantity-input{
+	width:55px;
+	padding-right:23px;
+}
+
+table.user-details input{ background:#fff; }
+
+table.user-details input:hover ,
+table.user-details input:hover{ background:#fff; }
+
+.user-details tr { display:block; margin-bottom:10px; }
+
+span.quantity-controls{ margin-left:-24px; margin-right:10px; }
+
+span.quantity-controls input.quantity-controls{ height:7px; }
+
+span.quantity-controls input.quantity-plus{ background:url(../images/hikaplus-icon.png) no-repeat; }
+
+span.quantity-controls input.quantity-minus{
+	margin-left:-2px;
+	margin-bottom:4px;
+	background:url(../images/hikaminus-icon.png) no-repeat;
+}
+
+#fancybox-wrap{ z-index:999999; box-sizing:unset; }
+
+#fancybox-wrap #fancybox-content h2 , .topten-view h4 ,
+.recent-view h4 , .latest-view h4 , .featured-view h4{
+	color:#1f2a30;
+	font-size:25px;
+	font-weight:normal;
+}
+
+#fancybox-wrap #fancybox-content h5{
+	font-size:15px;
+	font-weight:normal;
+}
+
+.vm-pagination{ float:none; }
+
+.vm-pagination .vm-page-counter{
+	float:none;
+	width:100%;
+	display:inline-block;
+}
+
+.vm-pagination.vm-pagination-top{ display:none; }
+
+.vm-orders-information td,.sectiontableheader th ,
+.vm-orders-items td ,.vm-wrap th,.vm-wrap td{
+	padding:10px;
+	border:1px solid #ddd;
+}
+
+.vm-col-3{ width:29.9%; margin:0 1.5%; }
+
+div.product .spacer { padding:20px 10px; }
+
+div.product{ margin-top:10px; margin-bottom:10px; }
+
+.userdata #com-form-login-username,
+.userdata #com-form-login-password,
+.userdata #com-form-login-remember,
+#com-form-login .width30,
+textarea#customer_note_field{ width:100%; }
+
+button.vmicon{ border:none; }
+
+button.vmicon.vm2-add_quantity_cart:hover{
+	background-position:0 0px !important;
+	background-color:transparent !important;
+}
+
+button.vmicon.vm2-remove_from_cart:hover{
+	background-position:0 -212px !important;
+	background-color:transparent !important;
+}
+
+.showcart , .continue_link{
+	width:100%;
+	display:block;
+	text-align:center;
+}
+
+.showcart + h4{ text-align:center; line-height:normal; }

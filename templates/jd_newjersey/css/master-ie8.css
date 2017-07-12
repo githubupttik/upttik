@@ -1,0 +1,14 @@
+/**
+* @version   $Id: master-ie8.css 20543 2014-04-21 16:28:00Z james $
+* @author    RocketTheme http://www.rockettheme.com
+* @copyright Copyright (C) 2007 - 2012 RocketTheme, LLC
+* @license   http://www.gnu.org/licenses/gpl-2.0.html GNU/GPLv2 only
+*/
+
+/* Grid Layout */
+
+/* Font size wackiness in IE8 */
+.promo p {
+	font-size: 1.3em !important;
+	line-height: 1.5em !important;
+}
