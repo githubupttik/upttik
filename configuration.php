@@ -13,7 +13,7 @@ class JConfig {
 	public $captcha = '0';
 	public $cookie_domain = '';
 	public $cookie_path = '';
-	public $db = 'upttik';
+	public $db = 'upttika';
 	public $dbprefix = 'soy2m_';
 	public $dbtype = 'mysql';
 	public $debug = '0';
