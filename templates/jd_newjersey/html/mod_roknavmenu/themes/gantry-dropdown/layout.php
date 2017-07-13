@@ -173,7 +173,27 @@ class GantryDropdownLayout extends AbstractRokMenuLayout
         ?>
         <li <?php if($item->hasListItemClasses()) : ?>class="<?php echo $item->getListItemClasses()?>"<?php endif;?> <?php if($item->hasCssId() && $this->activeid):?>id="<?php echo $item->getCssId();?>"<?php endif;?>>
 
-            
+            <a <?php if($item->hasLinkClasses()):?>class="<?php echo $item->getLinkClasses();?>"<?php endif;?> <?php if($item->hasLink()):?>href="<?php echo $item->getLink();?>"<?php endif;?> <?php if($item->hasTarget()):?>target="<?php echo $item->getTarget();?>"<?php endif;?> <?php if ($item->hasAttribute('onclick')): ?>onclick="<?php echo $item->getAttribute('onclick'); ?>"<?php endif; ?><?php if ($item->hasLinkAttribs()): ?> <?php echo $item->getLinkAttribs(); ?><?php endif; ?>>
+
+                <?php if ($custom_image && $custom_image != -1) :?>
+                    <img class="menu-image" src="<?php echo $gantry->templateUrl."/images/icons/".$custom_image; ?>" alt="<?php echo $custom_image; ?>" />
+                <?php endif; ?>
+                <?php
+                if ($custom_icon && $custom_icon != -1) {
+                    echo '<i class="' . $custom_icon . '">' . $item->getTitle() . '</i>';
+                } else {
+                    echo $item->getTitle();
+                }
+                if (!empty($item_subtext)) {
+                    echo '<em>'. $item_subtext . '</em>';
+                }
+                ?>
+                <?php
+                // Comment this out if you don't need a 1px bottom border fix
+                if ($item->hasChildren()): ?>
+                <span class="border-fixer"></span>
+                <?php endif; ?>
+            </a>
 
 
             <?php if ($item->hasChildren()): ?>
