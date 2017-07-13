@@ -366,10 +366,10 @@ class GantryDropdownLayout extends AbstractRokMenuLayout
         ob_start();
 ?>
 <div class="gf-menu-device-container responsive-type-<?php echo $this->args['responsive-menu'];?>"></div>
-<ul class="gf-menu l1 " <?php if (array_key_exists('tag_id',$this->args)): ?>id="<font style="font-size:32px"><?php echo $this->args['tag_id'];?>"<?php endif;?>>
+<ul class="gf-menu l1 " <?php if (array_key_exists('tag_id',$this->args)): ?>id="<?php echo $this->args['tag_id'];?>"<?php endif;?>>
     <?php foreach ($menu->getChildren() as $item) : ?>
         <?php $this->renderItem($item, $menu); ?>
-    <?php endforeach; ?></font>
+    <?php endforeach; ?>
 </ul>
 <?php
         return ob_get_clean();
