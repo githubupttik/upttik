@@ -27,3 +27,7 @@ Disallow: /modules/
 Disallow: /plugins/
 Disallow: /tmp/
 
+<<<<<<< HEAD
+=======
+#upttik
+>>>>>>> master
