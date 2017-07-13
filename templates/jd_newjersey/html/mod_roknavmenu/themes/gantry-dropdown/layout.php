@@ -100,18 +100,18 @@ class GantryDropdownLayout extends AbstractRokMenuLayout
         if (trim($column_widths[0] != '')) {
             for ($i=0; $i < $columns; $i++) {
                 if (isset($column_widths[$i])) {
-                    $ul_css[] = ' style="width:'.trim(intval($column_widths[$i])).'px;"';
+                    $ul_css[] = ' style="width:2000px;"';
                     $col_total += intval($column_widths[$i]);
                     $cols_left--;
                 } else {
                     $col_width = floor(intval((intval($dropdown_width) - $col_total) / $cols_left));
-                    $ul_css[] = ' style="width:'.$col_width.'px;"';
+                    $ul_css[] = ' style="width:2000px;"';
                 }
             }
         } else {
             for ($i=0; $i < $columns; $i++) {
                 $col_width = floor(intval($dropdown_width)/$columns);
-                $ul_css[] = ' style="width:'.$col_width.'px;"';
+                $ul_css[] = ' style="width:2000px;"';
             }
         }
 
