@@ -244,14 +244,14 @@ class GantryDropdownLayout extends AbstractRokMenuLayout
                                 <?php $this->renderItem($child, $menu); ?>
                             <?php else: ?>
                                 <li class="modules">
-                                    <?php if (isset($module) and ($module->showtitle != 0)) : ?>
+                                   <font style="font-size:32px"> <?php if (isset($module) and ($module->showtitle != 0)) : ?>
                                         <div class="module-title">
-                                            <h2 style="font-size:32px" class="title"><?php echo $module->title; ?></h2>
+                                            <h2  class="title"><?php echo $module->title; ?></h2>
                                         </div>
                                     <?php endif; ?>
                                     <div class="module-content">
                                         <?php echo ($child); ?>
-                                    </div>
+                                    </div></font>
                                 </li>
                             <?php endif; ?>
                         <?php endforeach; ?>
