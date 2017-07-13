@@ -246,7 +246,7 @@ class GantryDropdownLayout extends AbstractRokMenuLayout
                                 <li class="modules">
                                     <?php if (isset($module) and ($module->showtitle != 0)) : ?>
                                         <div class="module-title">
-                                            <h2 class="title"><?php echo $module->title; ?></h2>
+                                            <h2 style="font-size:32px" class="title"><?php echo $module->title; ?></h2>
                                         </div>
                                     <?php endif; ?>
                                     <div class="module-content">
