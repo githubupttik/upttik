@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2CacheManifestSlider extends N2CacheManifest
-{
+class N2CacheManifestSlider extends N2CacheManifest {
 
     private $parameters = array();
 
@@ -28,6 +20,10 @@ class N2CacheManifestSlider extends N2CacheManifest
 
     protected function isCacheValid(&$manifestData) {
 
+        if (!isset($manifestData['version']) || $manifestData['version'] != N2SS3::$version) {
+            return false;
+        }
+
         if (N2SmartSliderHelper::getInstance()
                                ->isSliderChanged($this->parameters['slider']->sliderId, 1)
         ) {
@@ -43,17 +39,23 @@ class N2CacheManifestSlider extends N2CacheManifest
             return false;
         }
 
+        if (!isset($manifestData['currentPath']) || $manifestData['currentPath'] != md5($this->currentPath)) {
+            return false;
+        }
+
         return true;
     }
 
     protected function addManifestData(&$manifestData) {
 
-        $manifestData['nextCacheRefresh'] = N2Pluggable::applyFilters('SSNextCacheRefresh', $this->parameters['slider']->slidesBuilder->getNextCacheRefresh(), array($this->parameters['slider']));
+        $manifestData['nextCacheRefresh'] = N2Pluggable::applyFilters('SSNextCacheRefresh', $this->parameters['slider']->getNextCacheRefresh(), array($this->parameters['slider']));
+        $manifestData['currentPath']      = md5($this->currentPath);
+        $manifestData['version']          = N2SS3::$version;
 
         $variations = 1;
 
         $params = $this->parameters['slider']->params;
-        if ($params->get('randomize', 0) || $params->get('randomizeFirst', 0)) {
+        if (!$params->get('randomize-cache', 0) && ($params->get('randomize', 0) || $params->get('randomizeFirst', 0))) {
             $variations = intval($params->get('variations', 5));
             if ($variations < 1) {
                 $variations = 1;

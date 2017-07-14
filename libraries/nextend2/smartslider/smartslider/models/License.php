@@ -1,19 +1,12 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2SmartsliderLicenseModel
-{
+class N2SmartsliderLicenseModel {
 
     private $key;
 
     public function __construct() {
         $this->key = N2Base::getApplication('smartslider')->storage->get('license', 'key');
+    
     }
 
     public static function getInstance() {
@@ -21,6 +14,7 @@ class N2SmartsliderLicenseModel
         if (!$ins) {
             $ins = new N2SmartsliderLicenseModel();
         }
+
         return $ins;
     }
 
@@ -33,6 +27,7 @@ class N2SmartsliderLicenseModel
         if ($lastActive && $lastActive > strtotime("-1 week")) {
             return true;
         }
+
         return false;
     }
 
@@ -42,7 +37,11 @@ class N2SmartsliderLicenseModel
 
     public function setKey($licenseKey) {
         N2Base::getApplication('smartslider')->storage->set('license', 'key', $licenseKey);
+        if ($licenseKey == '') {
+            N2Base::getApplication('smartslider')->storage->set('license', 'isActive', 0);
+        }
         $this->key = $licenseKey;
+    
     }
 
     public function checkKey($license, $action = 'licensecheck') {
@@ -57,21 +56,23 @@ class N2SmartsliderLicenseModel
         $status = $this->checkKey($this->key);
         if ($this->hasKey() && $status == 'OK') {
             N2Base::getApplication('smartslider')->storage->set('license', 'isActive', time());
+
             return $status;
         }
         N2Base::getApplication('smartslider')->storage->set('license', 'isActive', 0);
+
         return $status;
     }
 
     public function deAuthorize() {
         if ($this->hasKey()) {
-            $status = $this->checkKey($this->key, 'licensedeauthorize');
-            if ($status == 'OK' || $status == 'LICENSE_EXPIRED' || $status == 'PLATFORM_NOT_ALLOWED') {
-                $this->setKey('');
-                N2Message::notice('Smart Slider deauthorized on this site!');
-            }
-            return $status;
+            $this->checkKey($this->key, 'licensedeauthorize');
+            $this->setKey('');
+            N2Message::notice('Smart Slider deauthorized on this site!');
+
+            return 'OK';
         }
+
         return false;
     }
 }

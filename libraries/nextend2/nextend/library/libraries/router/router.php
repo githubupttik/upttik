@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2RouterAbstract
 {
@@ -64,7 +57,7 @@ class N2RouterAbstract
     public function route($url, $params = array(), $isPost = false) {
 
 
-        if (!strpos($url, "/")) {
+        if (strpos($url, "/") === false) {
             throw new Exception("Invalid action {$url}. Valid format controller/method");
         }
 
@@ -72,7 +65,7 @@ class N2RouterAbstract
 
         $url = "";
 
-        if (strpos($this->baseUrl, "?")) {
+        if (strpos($this->baseUrl, "?") !== false) {
             $url .= $this->baseUrl . "&nextendcontroller=" . $this->normalizeParameter($parsedAction[0]);
         } else {
             $url .= $this->baseUrl . "?nextendcontroller=" . $this->normalizeParameter($parsedAction[0]);

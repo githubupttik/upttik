@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2JS
-{
+class N2JS {
 
     public static function addFile($pathToFile, $group) {
         N2AssetsManager::$js->addFile($pathToFile, $group);
@@ -16,6 +8,10 @@ class N2JS
 
     public static function addFiles($path, $files, $group) {
         N2AssetsManager::$js->addFiles($path, $files, $group);
+    }
+
+    public static function addStaticGroup($file, $group) {
+        N2AssetsManager::$js->addStaticGroup($file, $group);
     }
 
     public static function addCode($code, $group) {
@@ -30,16 +26,34 @@ class N2JS
         N2AssetsManager::$js->addFirstCode($code, $unshift);
     }
 
-    public static function addInline($code, $global = false) {
-        N2AssetsManager::$js->addInline($code, $global);
+    public static function addInline($code, $global = false, $unshift = false) {
+        N2AssetsManager::$js->addInline($code, $global, $unshift);
     }
 
-    public static function jQuery($force = false) {
-        if (N2Settings::get('jquery') || N2Platform::$isAdmin || $force) {
+    public static function addInlineFile($path, $global = false, $unshift = false) {
+        static $loaded = array();
+        if (!isset($loaded[$path])) {
+            N2AssetsManager::$js->addInline(N2Filesystem::readFile($path), $global, $unshift);
+            $loaded[$path] = 1;
+        }
+    }
+
+    public static function jQuery($force = false, $overrideJQuerySetting = false) {
+        if ($force) {
+            if ($overrideJQuerySetting || N2Settings::get('jquery')) {
+                self::addFiles(N2LIBRARYASSETS . '/js/core/jquery', array(
+                    "jQuery.min.js"
+                ), "n2");
+            }
+            self::addFiles(N2LIBRARYASSETS . '/js/core/jquery', array(
+                "njQuery.js"
+            ), "n2");
+        } else if ($overrideJQuerySetting || N2Settings::get('jquery') || N2Platform::$isAdmin) {
             self::addFiles(N2LIBRARYASSETS . '/js/core/jquery', array(
                 "jQuery.min.js",
                 "njQuery.js"
             ), "n2");
+
         } else {
             if (N2Settings::get('async', '0')) {
                 self::addInline(file_get_contents(N2LIBRARYASSETS . '/js/core/jquery/njQuery.js'), true);
@@ -50,10 +64,6 @@ class N2JS
             }
         }
     
-
-        self::addFiles(N2LIBRARYASSETS . '/js', array(
-            "console.js"
-        ), "nextend-frontend");
     }
 
     public static function modernizr() {

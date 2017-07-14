@@ -1,16 +1,8 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 N2Loader::import("libraries.mvc.view");
 
-class N2Layout extends N2View
-{
+class N2Layout extends N2View {
 
     public $controller = null;
 
@@ -18,18 +10,20 @@ class N2Layout extends N2View
 
     private $viewObject = null;
 
+    protected $breadcrumbs = array();
+
     public function addView($fileName, $position, $viewParameters = array(), $path = null) {
         if (is_null($path)) {
             $controller = strtolower($this->appType->controllerName);
             $path       = $this->appType->path . NDS . "views" . NDS . $controller . NDS;
         }
 
-        if (!file_exists($path . $fileName . ".php")) {
-            throw new N2ViewException("View file ({$fileName}.php) not found in " . $path . $fileName);
+        if (!file_exists($path . $fileName . ".phtml")) {
+            throw new N2ViewException("View file ({$fileName}.phtml) not found in " . $path . $fileName);
         }
         $this->layoutFragments["nextend_" . $position][] = array(
             'params' => $viewParameters,
-            'file'   => $path . $fileName . ".php"
+            'file'   => $path . $fileName . ".phtml"
         );
     }
 
@@ -46,19 +40,37 @@ class N2Layout extends N2View
         if (is_null($path)) {
             $path = $this->appType->path . NDS . "layouts" . NDS;
         } else {
-            if (strpos(".", $path)) {
+            if (strpos(".", $path) !== false) {
                 $path = N2Filesystem::dirFormat($path);
             }
         }
 
-        if (!N2Filesystem::existsFile($path . $fileName . ".php")) {
-            throw new N2ViewException("Layout file ({$fileName}.php) not found in '{$path}'");
+        if (!N2Filesystem::existsFile($path . $fileName . ".phtml")) {
+            throw new N2ViewException("Layout file ({$fileName}.phtml) not found in '{$path}'");
         }
 
         extract($params);
 
+        ob_start();
         /** @noinspection PhpIncludeInspection */
-        include $path . $fileName . ".php";
+        include $path . $fileName . ".phtml";
+
+        $content = ob_get_clean();
+
+        if (!empty($this->breadcrumbs)) {
+            $html = '';
+            foreach ($this->breadcrumbs AS $i => $breadcrumb) {
+                if ($i) {
+                    $html .= N2Html::tag('span', array(), N2Html::tag('i', array('class' => 'n2-i n2-it n2-i-breadcrumbarrow'), ''));
+                }
+                $html .= $breadcrumb;
+            }
+            $content = str_replace('<!--breadcrumb-->', N2Html::tag('div', array(
+                'class' => 'n2-header-breadcrumbs n2-header-right'
+            ), $html), $content);
+        }
+
+        echo $content;
     }
 
     public function render($params = array(), $layoutName = false) {
@@ -100,10 +112,13 @@ class N2Layout extends N2View
         return $default;
     }
 
+    public function addBreadcrumb($html) {
+        $this->breadcrumbs[] = $html;
+    }
+
 }
 
-class N2LayoutAjax extends N2Layout
-{
+class N2LayoutAjax extends N2Layout {
 
     protected function renderLayout($fileName, $params = array(), $path = null) {
         $this->renderFragmentBlock('nextend_content');

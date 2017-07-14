@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2StorageSectionAdmin
 {
@@ -29,24 +22,35 @@ class N2StorageSectionAdmin
     }
 
     public static function getById($id, $section = null) {
-        $result = null;
+        static $cache = array();
+        if($id === 0){
+            return null;
+        }
+        if(!isset($cache[$section])){
+            $cache[$section] = array();
+        }else if(isset($cache[$section][$id])){
+            return $cache[$section][$id];
+        }
+        
+        $cache[$section][$id] = null;
         if ($section) {
             N2Pluggable::doAction($section, array(
                 $id,
-                &$result
+                &$cache[$section][$id]
             ));
-            if ($result) {
-                return $result;
+            if ($cache[$section][$id]) {
+                return $cache[$section][$id];
             }
         }
 
-        $result = self::$model->db->findByAttributes(array(
+        $cache[$section][$id] = self::$model->db->findByAttributes(array(
             "id" => $id
         ));
-        if ($section && $result['section'] != $section) {
-            return null;
+        if ($section && $cache[$section][$id]['section'] != $section) {
+            $cache[$section][$id] = null;
+            return $cache[$section][$id];
         }
-        return $result;
+        return $cache[$section][$id];
     }
 
     public static function getAll($application, $section, $referenceKey = null) {

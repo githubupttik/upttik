@@ -1,19 +1,21 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 define('N2_DS_INV', DIRECTORY_SEPARATOR == '/' ? '\\' : '/');
+
+if (!defined('NEXTEND_RELATIVE_CACHE_WEB')) {
+    define('NEXTEND_RELATIVE_CACHE_WEB', '/cache/nextend/web');
+    define('NEXTEND_CUSTOM_CACHE', 0);
+} else {
+    define('NEXTEND_CUSTOM_CACHE', 1);
+}
+if (!defined('NEXTEND_RELATIVE_CACHE_NOTWEB')) {
+    define('NEXTEND_RELATIVE_CACHE_NOTWEB', '/cache/nextend/notweb');
+}
 
 /**
  * Class N2FilesystemAbstract
  */
-abstract class N2FilesystemAbstract
-{
+abstract class N2FilesystemAbstract {
 
     /**
      * @var string /home/path/www/path/
@@ -21,6 +23,10 @@ abstract class N2FilesystemAbstract
     public $_basepath;
 
     public $_librarypath;
+
+    public static $dirPermission = 0777;
+
+    public static $filePermission = 0666;
 
     public static function getInstance() {
         static $instance;
@@ -47,6 +53,17 @@ abstract class N2FilesystemAbstract
         }
     }
 
+    public static function measurePermission($testDir) {
+        while ('.' != $testDir && !is_dir($testDir)) {
+            $testDir = dirname($testDir);
+        }
+
+        if ($stat = @stat($testDir)) {
+            self::$dirPermission  = $stat['mode'] & 0007777;
+            self::$filePermission = self::$dirPermission & 0000666;
+        }
+    }
+
     /**
      * @param $path
      *
@@ -65,12 +82,14 @@ abstract class N2FilesystemAbstract
     }
 
     public static function getWebCachePath() {
-        self::check(self::getBasePath(), 'cache');
-        return self::getBasePath() . '/cache/nextend/web';
+        if (!NEXTEND_CUSTOM_CACHE) {
+            self::check(self::getBasePath(), 'cache');
+        }
+        return self::getBasePath() . NEXTEND_RELATIVE_CACHE_WEB;
     }
 
     public static function getNotWebCachePath() {
-        return self::getBasePath() . '/cache/nextend/notweb';
+        return self::getBasePath() . NEXTEND_RELATIVE_CACHE_NOTWEB;
     }
 
     /**
@@ -113,7 +132,7 @@ abstract class N2FilesystemAbstract
      */
     public static function pathToRelativePath($path) {
         $i = N2Filesystem::getInstance();
-        return str_replace($i->_basepath, '', str_replace('/', DIRECTORY_SEPARATOR, $path));
+        return preg_replace('/^' . preg_quote($i->_basepath, '/') . '/', '', str_replace('/', DIRECTORY_SEPARATOR, $path));
     }
 
     /**
@@ -188,7 +207,7 @@ abstract class N2FilesystemAbstract
      * @return bool
      */
     public static function createFolder($path) {
-        return mkdir($path, 0777, true);
+        return mkdir($path, self::$dirPermission, true);
     }
 
     /**
@@ -201,7 +220,7 @@ abstract class N2FilesystemAbstract
         foreach (scandir($dir) as $file) {
             if ($file == '.' || $file == '..') continue;
             if (!self::deleteFolder($dir . DIRECTORY_SEPARATOR . $file)) {
-                chmod($dir . DIRECTORY_SEPARATOR . $file, 0777);
+                chmod($dir . DIRECTORY_SEPARATOR . $file, self::$dirPermission);
                 if (!self::deleteFolder($dir . DIRECTORY_SEPARATOR . $file)) return false;
             };
         }
@@ -227,7 +246,9 @@ abstract class N2FilesystemAbstract
         if (is_dir($path)) {
             if ($dh = opendir($path)) {
                 while (($file = readdir($dh)) !== false) {
-                    $files[] = $file;
+                    if ($file[0] != ".") {
+                        $files[] = $file;
+                    }
                 }
                 closedir($dh);
             }

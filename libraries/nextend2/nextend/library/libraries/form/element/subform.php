@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 N2Loader::import('libraries.form.element.list');
 
 class N2ElementSubform extends N2ElementList
@@ -29,7 +22,7 @@ class N2ElementSubform extends N2ElementList
 
         $html .= $this->renderContainer();
 
-        return NHtml::tag("div", array(
+        return N2Html::tag("div", array(
             "class" => "n2-subform " . N2XmlHelper::getAttribute($this->_xml, 'class'),
             "style" => N2XmlHelper::getAttribute($this->_xml, 'style'),
         ), $html);
@@ -54,13 +47,13 @@ class N2ElementSubform extends N2ElementList
             });
         ");
         */
-        return '<a id="' . $this->_id . '_button" class="n2-button n2-button-small n2-button-grey n2-uc" href="#">' . n2_('Configure') . '</a>';
+        return '<a id="' . $this->_id . '_button" class="n2-button n2-button-normal n2-button-s n2-radius-s n2-button-grey n2-uc" href="#">' . n2_('Configure') . '</a>';
     }
 
     function renderContainer() {
         ob_start();
         N2JS::addInline('
-        new NextendElementSubform(
+        new N2Classes.FormElementSubform(
               "' . $this->_id . '",
               "nextend-' . $this->_name . '-panel",
               "' . $this->_tab->_name . '",

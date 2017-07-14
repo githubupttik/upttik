@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-abstract class N2ApplicationType
-{
+abstract class N2ApplicationType {
 
     public $identifier;
 
@@ -65,6 +57,7 @@ abstract class N2ApplicationType
 
     public function setCurrent() {
         N2Base::$currentApplicationType = $this;
+
         return $this;
     }
 
@@ -79,13 +72,26 @@ abstract class N2ApplicationType
             $this->getController();
         }
 
-        $class = 'N2' . $this->app->name . $this->type . $this->controllerName . 'Controller';
-        if ($this->isAjaxCall()) {
-            //sleep(10);
-            $class = $class . 'Ajax';
-            N2Loader::import('controllers.ajax.' . $this->controllerName, $this->identifier);
+        if (!isset($parameters['prerender']) || !$parameters['prerender']) {
+            $class = 'N2' . $this->app->name . $this->type . $this->controllerName . 'Controller';
+            if ($this->isAjaxCall()) {
+                $class = $class . 'Ajax';
+                N2Loader::import('controllers.ajax.' . $this->controllerName, $this->identifier);
+            } else {
+                N2Loader::import('controllers.' . $this->controllerName, $this->identifier);
+            }
         } else {
-            N2Loader::import('controllers.' . $this->controllerName, $this->identifier);
+            $class = 'N2' . $this->app->name . $this->type . $this->controllerName . 'PrerenderController';
+            if ($this->isAjaxCall()) {
+                $class = $class . 'Ajax';
+                N2Loader::import('controllers.prerender.ajax.' . $this->controllerName, $this->identifier);
+            } else {
+                N2Loader::import('controllers.prerender.' . $this->controllerName, $this->identifier);
+            }
+        }
+
+        if (!class_exists($class, false)) {
+            throw new Exception('Controller not found: ' . $class);
         }
 
         $method = 'action';
@@ -94,6 +100,10 @@ abstract class N2ApplicationType
             $method .= $this->getAction($parameters["action"], $useRequest);
         } else {
             $method .= $this->getAction();
+        }
+
+        if (!method_exists($class, $method)) {
+            throw new Exception('Action not found: ' . $method . ' in ' . $class);
         }
 
 
@@ -124,7 +134,7 @@ abstract class N2ApplicationType
 
     final protected function getController($controller = false, $useRequest = true) {
         if ($useRequest) {
-            $desiredController = N2Request::getVar("nextendcontroller");
+            $desiredController = N2Request::getCmd("nextendcontroller");
             if (!empty($desiredController)) {
                 $controller = $desiredController;
             }
@@ -145,7 +155,7 @@ abstract class N2ApplicationType
      */
     final protected function getAction($action = false, $useRequest = true) {
         if ($useRequest) {
-            $desiredAction = N2Request::getVar("nextendaction");
+            $desiredAction = N2Request::getCmd("nextendaction");
             if (!empty($desiredAction)) {
                 $action = $desiredAction;
             }
@@ -160,6 +170,9 @@ abstract class N2ApplicationType
         return $this->actionName;
     }
 
+    /**
+     * @return N2Layout
+     */
     public function getLayout() {
         return $this->controller->layout;
     }
@@ -180,6 +193,8 @@ abstract class N2ApplicationType
             "action"     => $method
         ));
 
+        $this->onControllerReady();
+
         return array(
             $this->controller,
             $method
@@ -189,6 +204,9 @@ abstract class N2ApplicationType
     public function render($parameters, $arguments = array()) {
 
         $this->run($parameters, $arguments);
+    }
+
+    protected function onControllerReady() {
     }
 
 } 

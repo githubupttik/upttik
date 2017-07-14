@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2SystemApplicationInfo extends N2ApplicationInfo
-{
+class N2SystemApplicationInfo extends N2ApplicationInfo {
 
     public function __construct() {
         $this->path      = dirname(__FILE__);
@@ -40,21 +32,8 @@ class N2SystemApplicationInfo extends N2ApplicationInfo
     public function assetsBackend() {
 
         $path = $this->getAssetsPath();
-
-        N2JS::addFiles($path . "/admin/js", array(
-            "visual.js",
-            "modals.js",
-            "sets.js",
-            "visualeditor.js"
-        ), 'system-backend');
-
-        foreach (glob($path . "/admin/js/*.js") AS $file) {
-            N2JS::addFile($file, 'system-backend');
-        }
-
-        foreach (glob($path . "/admin/js/fontservices/*.js") AS $file) {
-            N2JS::addFile($file, 'system-backend');
-        }
+        N2JS::addStaticGroup($path . "/dist/system-backend.min.js", "system-backend");
+    
     }
 
     public function assetsFrontend() {

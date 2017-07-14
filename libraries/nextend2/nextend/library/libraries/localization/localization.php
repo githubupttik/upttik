@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 require_once 'pomo/translations.php';
 require_once 'pomo/mo.php';
@@ -30,7 +23,11 @@ class N2LocalizationAbstract
     }
 
     static function load_plugin_textdomain($path, $domain = 'nextend') {
-        $locale = N2Localization::getLocale();
+        if (N2Settings::get('force-english-backend')) {
+            $locale = 'en_EN';
+        } else {
+            $locale = N2Localization::getLocale();
+        }
         $mofile = $locale . '.mo';
         if ($loaded = N2Localization::load_textdomain($domain, $path . '/languages/' . $mofile)) {
             return $loaded;

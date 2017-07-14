@@ -1,18 +1,10 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 N2Loader::import('libraries.form.element');
 
 /**
  * Class N2Tab
  */
-class N2Tab
-{
+class N2Tab {
 
     /**
      * @var
@@ -40,6 +32,8 @@ class N2Tab
     var $_elements;
 
     var $_hide = false;
+
+    public $_tabs;
 
     /**
      * @param $form
@@ -90,7 +84,7 @@ class N2Tab
         $this->decorateGroupEnd();
 
         if ($this->_hide) {
-            echo NHtml::tag('div', array('style' => 'display: none;'), ob_get_clean());
+            echo N2Html::tag('div', array('style' => 'display: none;'), ob_get_clean());
         } else {
             echo ob_get_clean();
         }
@@ -99,8 +93,12 @@ class N2Tab
 
     function decorateTitle() {
         echo "<div id='n2-tab-" . N2XmlHelper::getAttribute($this->_xml, 'name') . "' class='n2-form-tab " . N2XmlHelper::getAttribute($this->_xml, 'class') . "'>";
+        $this->_renderTitle();
+    }
+
+    protected function _renderTitle() {
         if ($this->_hidetitle != 1) {
-            echo NHtml::tag('div', array(
+            echo N2Html::tag('div', array(
                 'class' => 'n2-h2 n2-content-box-title-bg'
             ), n2_(N2XmlHelper::getAttribute($this->_xml, 'label')));
         }
@@ -108,7 +106,7 @@ class N2Tab
 
     function decorateGroupStart() {
         echo "<table>";
-        echo NHtml::tag('colgroup', array(), NHtml::tag('col', array('class' => 'n2-label-col')) . NHtml::tag('col', array('class' => 'n2-element-col')));
+        echo N2Html::tag('colgroup', array(), N2Html::tag('col', array('class' => 'n2-label-col')) . N2Html::tag('col', array('class' => 'n2-element-col')));
     }
 
     function decorateGroupEnd() {
@@ -122,29 +120,81 @@ class N2Tab
      * @param $i
      */
     function decorateElement(&$el, $out, $i) {
-        echo "<tr class='" . N2XmlHelper::getAttribute($el->_xml, 'class') . "'>";
+        $attrs = array();
+        if (isset($el->_xml->attribute)) {
+            foreach ($el->_xml->attribute AS $attr) {
+                $attrs[N2XmlHelper::getAttribute($attr, 'type')] = (string)$attr;
+            }
+        }
+        echo N2Html::openTag('tr', $attrs + array('class' => N2XmlHelper::getAttribute($el->_xml, 'class')));
         $colSpan = '';
         if ($out[0] != '') {
-            echo "<td class='n2-label'>" . $out[0] . "</td>";
+            echo "<td class='n2-label" . ($el->hasLabel ? '' : ' n2-empty-label') . "'>" . $out[0] . "</td>";
         } else {
             $colSpan = 'colspan="2"';
         }
         echo "<td class='n2-element' {$colSpan}>" . $out[1] . "</td>";
         echo "</tr>";
     }
+
+    function initTabs() {
+        if (count($this->_tabs) == 0) {
+
+            foreach ($this->_xml->params as $tab) {
+                $test = N2XmlHelper::getAttribute($tab, 'test');
+                if ($test == '' || $this->_form->makeTest($test)) {
+                    $type = N2XmlHelper::getAttribute($tab, 'type');
+                    if ($type == '') $type = 'default';
+                    N2Loader::import('libraries.form.tabs.' . $type);
+                    $class = 'N2Tab' . ucfirst($type);
+
+                    $this->_tabs[N2XmlHelper::getAttribute($tab, 'name')] = new $class($this->_form, $tab);
+                }
+            }
+
+            N2Pluggable::doAction('N2TabTabbed' . N2XmlHelper::getAttribute($this->_xml, 'name'), array(
+                $this
+            ));
+        }
+    }
+
+    public function addTabXML($file, $position = 2) {
+        $xml = simplexml_load_string(file_get_contents($file));
+
+        foreach ($xml->params as $tab) {
+            $test = N2XmlHelper::getAttribute($tab, 'test');
+            if ($test == '' || $this->_form->makeTest($test)) {
+                $type = N2XmlHelper::getAttribute($tab, 'type');
+                if ($type == '') $type = 'default';
+                N2Loader::import('libraries.form.tabs.' . $type);
+                $class = 'N2Tab' . ucfirst($type);
+
+                $a                                          = array();
+                $a[N2XmlHelper::getAttribute($tab, 'name')] = new $class($this->_form, $tab);
+                $this->_tabs                                = self::array_insert($this->_tabs, $a, $position);
+            }
+        }
+    }
+
+    public function removeTab($name) {
+        if (isset($this->_tabs[$name])) {
+            unset($this->_tabs[$name]);
+        }
+    }
+
+    private function array_insert($array, $values, $offset) {
+        return array_slice($array, 0, $offset, true) + $values + array_slice($array, $offset, NULL, true);
+    }
 }
 
-class N2TabDark extends N2Tab
-{
+class N2TabDark extends N2Tab {
 
     function decorateTitle() {
         echo "<div id='n2-tab-" . N2XmlHelper::getAttribute($this->_xml, 'name') . "' class='n2-form-tab " . N2XmlHelper::getAttribute($this->_xml, 'class') . "'>";
         if ($this->_hidetitle != 1) {
-            echo NHtml::tag('div', array(
+            echo N2Html::tag('div', array(
                 'class' => 'n2-h3 n2-sidebar-header-bg n2-uc'
             ), n2_(N2XmlHelper::getAttribute($this->_xml, 'label')));
         }
     }
 }
-
-?>

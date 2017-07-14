@@ -228,13 +228,13 @@
   padding: 3px 0;
 }
 .gf-menu .dropdown .grouped ol > li > .item {
-  font-size: 45px;
+  font-size: 20px;
   padding-top: 3px;
   padding-bottom: 3px;
 }
 .gf-menu .dropdown .modules {
   text-align: left;
-  color: #bfbfbf;
+  color: #34ccff;
 }
 .gf-menu .dropdown .modules .module-content {
   padding: 0 10px;

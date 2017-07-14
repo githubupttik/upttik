@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 N2Loader::import("smartslider3", "smartslider");
 
 class N2SmartSliderApplication extends N2Application
@@ -23,6 +16,7 @@ class N2SmartSliderApplication extends N2Application
 
         N2Loader::import('plugins.loadplugin', 'smartslider.platform');
 
+        N2Pluggable::doAction('n2_ss_plugins_loaded');
 
         N2Loader::import('libraries.link', 'smartslider');
     }

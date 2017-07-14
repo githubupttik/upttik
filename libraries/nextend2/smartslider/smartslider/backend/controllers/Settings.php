@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2SmartsliderBackendSettingsController extends N2SmartSliderController
 {
@@ -73,7 +66,7 @@ class N2SmartsliderBackendSettingsController extends N2SmartSliderController
         if ($this->validatePermission('smartslider_config')) {
             if ($this->validateToken()) {
                 $slidersModel = new N2SmartsliderSlidersModel();
-                foreach ($slidersModel->getAll() AS $slider) {
+                foreach ($slidersModel->_getAll() AS $slider) {
                     $slidersModel->refreshCache($slider['id']);
                 }
                 N2Cache::clearGroup('n2-ss-0');

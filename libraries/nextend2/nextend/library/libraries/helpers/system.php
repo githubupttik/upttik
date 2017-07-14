@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2SystemHelper
 {
@@ -38,7 +31,7 @@ class N2SystemHelper
         $setting = (string)$setting;
         if (!($len = strlen($setting))) return NULL;
         $last    = strtolower($setting[$len - 1]);
-        $numeric = 0 + $setting;
+        $numeric = intval($setting);
         $numeric *= isset($short[$last]) ? $short[$last] : 1;
 
         return $numeric;
@@ -61,9 +54,9 @@ class N2SystemHelper
         }
 
         if ($error) echo "<p><strong>{$error}</strong></p>";
-        echo NHtml::openTag("pre");
+        echo N2Html::openTag("pre");
         print_r($outrace);
-        echo NHtml::closeTag("pre");
+        echo N2Html::closeTag("pre");
         n2_exit(true);
     }
 

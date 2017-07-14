@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2Loader
-{
+class N2Loader {
 
     public static $paths = array(
         'core'            => N2LIBRARY,
@@ -38,7 +30,7 @@ class N2Loader
 
         if ($dirContent) {
             foreach ($dirContent as $file) {
-                if (is_file($dirName . NDS . $file)) {
+                if (is_file($dirName . NDS . $file) && substr($file, -4) == '.php') {
                     self::importPath($dirName . NDS . $file, true);
                 }
             }

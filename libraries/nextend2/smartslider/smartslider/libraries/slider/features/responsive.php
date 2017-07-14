@@ -1,16 +1,9 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2SmartSliderFeatureResponsive
-{
+class N2SmartSliderFeatureResponsive {
 
-    private $slider;
+    /** @var  N2SmartSliderAbstract */
+    public $slider;
 
     public $desktop = 1;
 
@@ -29,6 +22,10 @@ class N2SmartSliderFeatureResponsive
     public $scaleUp = 0;
 
     public $forceFull = 0;
+	
+	public $forceFullHorizontalSelector = '';
+
+    public $constrainRatio = 1;
 
     public $minimumHeight = -1;
 
@@ -63,7 +60,7 @@ class N2SmartSliderFeatureResponsive
 
     public $orientationMode = 'width_and_height';
 
-    public function __construct($slider) {
+    public function __construct($slider, $features) {
 
         $this->slider = $slider;
 
@@ -76,7 +73,7 @@ class N2SmartSliderFeatureResponsive
         if (!class_exists($class)) {
             $class = 'N2SSResponsiveAuto';
         }
-        $this->modeObject      = new $class($slider->params, $this);
+        $this->modeObject      = new $class($slider->params, $this, $features);
         $this->onResizeEnabled = !$slider->disableResponsive;
 
         if (!$this->scaleDown && !$this->scaleUp) {
@@ -154,7 +151,8 @@ class N2SmartSliderFeatureResponsive
             $minimumFontSize['desktopLandscape'] = intval($slider->params->get('desktop-landscape-minimum-font-size', 4));
         }
 
-        if ($slider->params->get('tablet-portrait', 0)) {
+        $tabletPortraitEnabled = $slider->params->get('tablet-portrait', 0);
+        if ($tabletPortraitEnabled) {
             $tabletWidth = intval($slider->params->get('tablet-portrait-width', 800));
         } else {
             $tabletWidth = intval($sliderWidth * N2SmartSliderSettings::get('responsive-default-ratio-tablet-portrait', 70) / 100);
@@ -167,7 +165,7 @@ class N2SmartSliderFeatureResponsive
                 $modes['tabletPortrait']           = 1;
                 $modeSwitchWidth['tabletPortrait'] = $tabletWidth;
                 $portraitHeight                    = intval($slider->params->get('tablet-portrait-height'));
-                if ($portraitHeight) {
+                if ($tabletPortraitEnabled && $portraitHeight) {
                     $ratioModifiers['tabletPortrait'] = $portraitHeight / ($modeSwitchWidth['tabletPortrait'] / $sliderWidth * $sliderHeight);
                 } else {
                     $ratioModifiers['tabletPortrait'] = $ratioModifiers['desktopPortrait'];
@@ -193,16 +191,17 @@ class N2SmartSliderFeatureResponsive
                 $minimumFontSize['tabletLandscape'] = intval($slider->params->get('tablet-landscape-minimum-font-size', 4));
             }
         } else {
-            $this->tabletLandscapeScreenWidth = $this->tabletPortraitScreenWidth;
+            $this->tabletLandscapeScreenWidth  = $this->tabletPortraitScreenWidth;
             $ratioModifiers['tabletLandscape'] = $ratioModifiers['tabletPortrait'];
         }
 
-
-        if ($slider->params->get('mobile-portrait', 0)) {
+        $mobilePortraitEnabled = $slider->params->get('mobile-portrait', 0);
+        if ($mobilePortraitEnabled) {
             $mobileWidth = intval($slider->params->get('mobile-portrait-width', 440));
         } else {
             $mobileWidth = intval($sliderWidth * N2SmartSliderSettings::get('responsive-default-ratio-mobile-portrait', 50) / 100);
         }
+
         if ($mobileWidth > 0) {
             if ($modeSwitchWidth['tabletPortrait'] > 0) {
                 if ($mobileWidth >= $modeSwitchWidth['tabletPortrait']) {
@@ -217,7 +216,7 @@ class N2SmartSliderFeatureResponsive
                 $modes['mobilePortrait']           = 1;
                 $modeSwitchWidth['mobilePortrait'] = $mobileWidth;
                 $portraitHeight                    = intval($slider->params->get('mobile-portrait-height'));
-                if ($portraitHeight) {
+                if ($mobilePortraitEnabled && $portraitHeight) {
                     $ratioModifiers['mobilePortrait'] = $portraitHeight / ($modeSwitchWidth['mobilePortrait'] / $sliderWidth * $sliderHeight);
                 } else {
                     $ratioModifiers['mobilePortrait'] = $ratioModifiers['tabletPortrait'];
@@ -249,7 +248,7 @@ class N2SmartSliderFeatureResponsive
                 $minimumFontSize['mobileLandscape'] = intval($slider->params->get('mobile-landscape-minimum-font-size', 4));
             }
         } else {
-            $this->mobileLandscapeScreenWidth = $this->mobilePortraitScreenWidth;
+            $this->mobileLandscapeScreenWidth  = $this->mobilePortraitScreenWidth;
             $ratioModifiers['mobileLandscape'] = $ratioModifiers['mobilePortrait'];
         }
         $this->modes                  = $modes;
@@ -393,11 +392,10 @@ class N2SmartSliderFeatureResponsive
             $this->maximumSlideWidthMobileLandscape = $this->maximumSlideWidthMobile;
         }
 
-
         $properties['responsive'] = array(
-            'desktop'                          => $this->desktop,
-            'tablet'                           => $this->tablet,
-            'mobile'                           => $this->mobile,
+            'desktop' => N2Platform::$isAdmin ? 1 : $this->desktop,
+            'tablet'  => $this->tablet,
+            'mobile'  => $this->mobile,
 
             'onResizeEnabled'                  => $this->onResizeEnabled,
             'type'                             => $this->type,
@@ -413,24 +411,35 @@ class N2SmartSliderFeatureResponsive
             'maximumSlideWidthMobileLandscape' => $this->maximumSlideWidthMobileLandscape,
             'maximumSlideWidthConstrainHeight' => intval($this->maximumSlideWidthConstrainHeight),
             'forceFull'                        => $this->forceFull,
+			'forceFullHorizontalSelector'      => $this->forceFullHorizontalSelector,
+            'constrainRatio'                   => $this->constrainRatio,
             'verticalOffsetSelectors'          => $this->verticalOffsetSelectors,
 
-            'focusUser'                        => $this->focusUser,
-            'focusAutoplay'                    => $this->focusAutoplay,
+            'focusUser'     => $this->focusUser,
+            'focusAutoplay' => $this->focusAutoplay,
 
-            'deviceModes'                      => $this->modes,
-            'normalizedDeviceModes'            => $normalizedDeviceModes,
-            'verticalRatioModifiers'           => $this->verticalRatioModifiers,
-            'minimumFontSizes'                 => $this->minimumFontSizes,
-            'ratioToDevice'                    => $this->sliderRatioToDevice,
-            'sliderWidthToDevice'              => $this->sliderWidthToDevice,
+            'deviceModes'            => $this->modes,
+            'normalizedDeviceModes'  => $normalizedDeviceModes,
+            'verticalRatioModifiers' => $this->verticalRatioModifiers,
+            'minimumFontSizes'       => $this->minimumFontSizes,
+            'ratioToDevice'          => $this->sliderRatioToDevice,
+            'sliderWidthToDevice'    => $this->sliderWidthToDevice,
 
-            'basedOn'                          => $this->basedOn,
-            'tabletPortraitScreenWidth'        => $this->tabletPortraitScreenWidth,
-            'mobilePortraitScreenWidth'        => $this->mobilePortraitScreenWidth,
-            'tabletLandscapeScreenWidth'       => $this->tabletLandscapeScreenWidth,
-            'mobileLandscapeScreenWidth'       => $this->mobileLandscapeScreenWidth,
-            'orientationMode'                  => $this->orientationMode
+            'basedOn'                    => $this->basedOn,
+            'tabletPortraitScreenWidth'  => $this->tabletPortraitScreenWidth,
+            'mobilePortraitScreenWidth'  => $this->mobilePortraitScreenWidth,
+            'tabletLandscapeScreenWidth' => $this->tabletLandscapeScreenWidth,
+            'mobileLandscapeScreenWidth' => $this->mobileLandscapeScreenWidth,
+            'orientationMode'            => $this->orientationMode,
+
+            'scrollFix'          => intval($this->slider->params->get('scroll-fix', 0)),
+            'overflowHiddenPage' => intval($this->slider->params->get('overflow-hidden-page', 0)),
+
+            'desktopPortraitScreenWidth' => $this->desktopPortraitScreenWidth,
+            'tabletPortraitScreenWidth'  => $this->tabletPortraitScreenWidth,
+            'mobilePortraitScreenWidth'  => $this->mobilePortraitScreenWidth,
+            'tabletLandscapeScreenWidth' => $this->tabletLandscapeScreenWidth,
+            'mobileLandscapeScreenWidth' => $this->mobileLandscapeScreenWidth,
         );
     }
 

@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class NextendImageFallBack
-{
+class NextendImageFallBack {
 
     static public function findImage($s) {
         preg_match_all('/(<img.*?src=[\'"](.*?)[\'"][^>]*>)|(background(-image)??\s*?:.*?url\((["|\']?)?(.+?)(["|\']?)?\))/i', $s, $r);
@@ -20,6 +12,12 @@ class NextendImageFallBack
             $s = '';
         }
         return $s;
+    }
+
+    static public function siteURL() {
+        $protocol   = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+        $domainName = $_SERVER['HTTP_HOST'];
+        return $protocol . $domainName;
     }
 
     static public function fallback($root, $imageVars, $textVars = array()) {
@@ -35,7 +33,17 @@ class NextendImageFallBack
                 foreach ($textVars as $text) {
                     $imageInText = self::findImage($text);
                     if (!empty($imageInText)) {
-                        $return = N2ImageHelper::dynamic($root . $imageInText);
+                        $file = $root . $imageInText;
+                        if (N2Filesystem::existsFile($file)) {
+                            $return = N2ImageHelper::dynamic($root . $imageInText);
+                        } else {
+                            $slashes = array('/','\\');
+							if(in_array(substr(self::siteURL(), -1), $slashes) || in_array(substr($imageInText, 0, 1), $slashes)){
+								$return = N2ImageHelper::dynamic(self::siteURL() . $imageInText);
+							} else {
+								$return = N2ImageHelper::dynamic(self::siteURL() . '/' . $imageInText);
+							}
+                        }
                         if ($return != '$/') {
                             break;
                         } else {

@@ -1,12 +1,5 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
-N2Loader::import('libraries.slider.generator.N2SmartSliderGeneratorAbstract', 'smartslider');
+N2Loader::import('libraries.slider.generator.abstract', 'smartslider');
 require_once(dirname(__FILE__) . '/../../imagefallback.php');
 
 class N2GeneratorJoomlaContentCategory extends N2GeneratorAbstract

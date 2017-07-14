@@ -1,26 +1,24 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2Settings
-{
+class N2Settings {
 
     private static $data;
 
     public static function init() {
 
         $config = array(
-            'jquery'            => 1,
-            'gsap'              => 1,
-            'async'             => 0,
-            'combine-js'        => 0,
-            'minify-js'         => 0,
-            'protocol-relative' => 1
+            'jquery'                   => 1,
+            'gsap'                     => 1,
+            'async'                    => 0,
+            'combine-js'               => 0,
+            'minify-js'                => 0,
+            'scriptattributes'         => '',
+            'protocol-relative'        => 1,
+            'force-english-backend'    => 0,
+            'show-joomla-admin-footer' => 0,
+            'curl'                     => 1,
+            'curl-clean-proxy'         => 0,
+            'css-mode'                 => 'normal'
         );
 
         if (!defined('NEXTEND_INSTALL')) {

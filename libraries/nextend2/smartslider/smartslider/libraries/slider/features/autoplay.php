@@ -1,19 +1,11 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2SmartSliderFeatureAutoplay
-{
+class N2SmartSliderFeatureAutoplay {
 
     private $slider;
 
     public $isEnabled = 0, $isStart = 0, $duration = 8000;
-    public $interval = 0, $intervalModifier = 'loop', $intervalSlide = 'current';
+    public $interval = 0, $intervalModifier = 'loop', $intervalSlide = 'current', $allowReStart = 0;
     public $stopOnClick = 1, $stopOnMouseEnter = 1, $stopOnMediaStarted = 1;
     public $resumeOnMouseLeave = 0, $resumeOnMediaEnded = 1, $resumeOnSlideChanged = 0;
 
@@ -33,6 +25,10 @@ class N2SmartSliderFeatureAutoplay
 
 
         list($this->interval, $this->intervalModifier, $this->intervalSlide) = (array)N2Parse::parse($slider->params->get('autoplayfinish', '0|*|loop|*|current'));
+
+
+        $this->allowReStart = intval($params->get('autoplayAllowReStart', 0));
+
         $this->interval = intval($this->interval);
 
         $this->stopOnClick        = intval($params->get('autoplayStopClick', 1));
@@ -40,45 +36,49 @@ class N2SmartSliderFeatureAutoplay
         $this->stopOnMediaStarted = intval($params->get('autoplayStopMedia', 1));
 
 
-        $this->resumeOnClick      = $params->get('autoplayResumeClick', 0);
+        $this->resumeOnClick      = intval($params->get('autoplayResumeClick', 0));
         $this->resumeOnMouse      = $params->get('autoplayResumeMouse', 0);
         $this->resumeOnMediaEnded = intval($params->get('autoplayResumeMedia', 1));
+
 
     }
 
     public function makeJavaScriptProperties(&$properties) {
-        $autoplayToSlide = 0;
-
-        switch ($this->intervalModifier) {
-            case 'slide':
-                $autoplayToSlide = $this->interval;
-                if ($this->intervalSlide == 'next') {
-                    $autoplayToSlide++;
-                }
-                break;
-            default:
-                $autoplayToSlide = $this->interval * count($this->slider->slides) - 1;
-                if ($this->intervalSlide == 'next') {
-                    $autoplayToSlide++;
-                }
-                break;
-        }
         $properties['autoplay'] = array(
-            'enabled'         => $this->isEnabled,
-            'start'           => $this->isStart,
-            'duration'        => $this->duration,
-            'autoplayToSlide' => $autoplayToSlide,
-            'pause'           => array(
+            'enabled'              => $this->isEnabled,
+            'start'                => $this->isStart,
+            'duration'             => $this->duration,
+            'autoplayToSlide'      => 0,
+            'autoplayToSlideIndex' => -1,
+            'allowReStart'         => $this->allowReStart,
+            'pause'                => array(
                 'click'        => $this->stopOnClick,
                 'mouse'        => $this->stopOnMouse,
                 'mediaStarted' => $this->stopOnMediaStarted
             ),
-            'resume'          => array(
+            'resume'               => array(
                 'click'        => $this->resumeOnClick,
                 'mouse'        => $this->resumeOnMouse,
                 'mediaEnded'   => $this->resumeOnMediaEnded,
                 'slidechanged' => $this->resumeOnSlideChanged
             )
         );
+
+        switch ($this->intervalModifier) {
+            case 'slide':
+                $properties['autoplay']['autoplayToSlide'] = $this->interval;
+                if ($this->intervalSlide == 'next') {
+                    $properties['autoplay']['autoplayToSlide']++;
+                }
+                break;
+            case 'slideindex':
+                $properties['autoplay']['autoplayToSlideIndex'] = $this->interval;
+            default:
+                $properties['autoplay']['autoplayToSlide'] = $this->interval * count($this->slider->slides) - 1;
+                if ($this->intervalSlide == 'next') {
+                    $properties['autoplay']['autoplayToSlide']++;
+                }
+                break;
+        }
     }
 }

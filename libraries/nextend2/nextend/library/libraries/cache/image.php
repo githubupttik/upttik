@@ -1,26 +1,24 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 N2Loader::import('libraries.cache.cache');
 
-class N2CacheImage extends N2Cache
-{
+class N2CacheImage extends N2Cache {
 
     public function makeCache($fileExtension, $callable, $parameters = array(), $hash = false) {
 
         if (!$hash) {
             $hash = $this->generateHash($fileExtension, $callable, $parameters);
         }
-        $fileName = $hash . '.' . $fileExtension;
+        $keepFileName = pathinfo($parameters[1], PATHINFO_FILENAME);
+        $fileName     = $hash . (!empty($keepFileName) ? '/' . $keepFileName : '') . '.' . $fileExtension;
 
         if (!$this->isCached($fileName)) {
+            $path = $this->getStorageFilePath($fileName);
 
-            array_unshift($parameters, $this->getStorageFilePath($fileName));
+            if (!empty($keepFileName) && !N2Filesystem::existsFolder(dirname($path))) {
+                N2Filesystem::createFolder(dirname($path));
+            }
+
+            array_unshift($parameters, $path);
 
             call_user_func_array($callable, $parameters);
         }
@@ -51,8 +49,7 @@ class N2CacheImage extends N2Cache
     }
 }
 
-class N2StoreImage extends N2Cache
-{
+class N2StoreImage extends N2Cache {
 
     public function makeCache($fileName, $content) {
         if (!$this->isImage($fileName)) {
@@ -78,7 +75,9 @@ class N2StoreImage extends N2Cache
             'gif',
             'jpg',
             'jpeg',
-            'png'
+            'png',
+            'mp4',
+            'mp3'
         );
 
         $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));

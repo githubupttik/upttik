@@ -1,17 +1,9 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 /**
- * Class NHtml
+ * Class N2Html
  */
-class NHtml
-{
+class N2Html {
 
     public static $closeSingleTags = true;
     /**
@@ -106,28 +98,31 @@ class NHtml
      *
      * @return string the rendering result
      */
-    public static function renderAttributes($htmlOptions) {
+    public static function renderAttributes($htmlOptions = array()) {
         static $specialAttributes = array(
-            'async'         => 1,
-            'autofocus'     => 1,
-            'autoplay'      => 1,
-            'controls'      => 1,
-            'declare'       => 1,
-            'default'       => 1,
-            'defer'         => 1,
-            'disabled'      => 1,
-            'ismap'         => 1,
-            'loop'          => 1,
-            'muted'         => 1,
-            'nohref'        => 1,
-            'noresize'      => 1,
-            'novalidate'    => 1,
-            'open'          => 1,
-            'reversed'      => 1,
-            'scoped'        => 1,
-            'seamless'      => 1,
-            'selected'      => 1,
-            'typemustmatch' => 1,
+            'async'              => 1,
+            'autofocus'          => 1,
+            'autoplay'           => 1,
+            'controls'           => 1,
+            'declare'            => 1,
+            'default'            => 1,
+            'defer'              => 1,
+            'disabled'           => 1,
+            'ismap'              => 1,
+            'loop'               => 1,
+            'muted'              => 1,
+            'playsinline'        => 1,
+            'webkit-playsinline' => 1,
+            'nohref'             => 1,
+            'noresize'           => 1,
+            'novalidate'         => 1,
+            'open'               => 1,
+            'reversed'           => 1,
+            'scoped'             => 1,
+            'seamless'           => 1,
+            'selected'           => 1,
+            'typemustmatch'      => 1,
+            'lazyload'           => 1,
         );
 
         if ($htmlOptions === array()) return '';
@@ -164,11 +159,11 @@ class NHtml
         if (!is_string($url)) {
             throw new Exception();
         }
-        $htmlOptions["href"]   = $url;
-        $htmlOptions["encode"] = false;
+        $htmlOptions["href"] = $url;
+        //$htmlOptions["encode"] = false;
 
         $url = self::openTag("a", $htmlOptions);
-        if ($htmlOptions["encode"]) {
+        if (isset($htmlOptions["encode"]) && $htmlOptions["encode"]) {
             $url .= self::encode($name);
         } else {
             $url .= $name;
@@ -196,12 +191,12 @@ class NHtml
                 "href" => $script
             );
             $options = array_merge($options, $scriptOptions);
-            return NHtml::tag('link', $options, false);
+            return N2Html::tag('link', $options, false);
         }
 
-        return NHtml::tag("style", array(
-            "type" => "text/css"
-        ), $script);
+        return N2Html::tag("style", $scriptOptions + array(
+                "type" => "text/css"
+            ), $script);
     }
 
     /**
@@ -214,10 +209,10 @@ class NHtml
      */
     public static function script($script, $file = false) {
         if ($file) {
-            return NHtml::tag('script', array(
-                'type' => 'text/javascript',
-                'src'  => $script
-            ), '');
+            return N2Html::tag('script', array(
+                    'type' => 'text/javascript',
+                    'src'  => $script
+                ) + self::getScriptAttributes(), '');
         }
         return self::tag('script', array(
             'type'   => 'text/javascript',
@@ -227,7 +222,7 @@ class NHtml
 
     public static function scriptTemplate($script, $file = false) {
         if ($file) {
-            return NHtml::tag('script', array(
+            return N2Html::tag('script', array(
                 'type' => 'text/javascript',
                 'src'  => $script
             ), '');
@@ -239,7 +234,36 @@ class NHtml
     }
 
     public static function clear() {
-        return self::tag("div", array("class" => "clear"), "");
+        return self::tag("div", array("class" => "n2-clear"), "");
+    }
+
+    private static function getScriptAttributes() {
+        static $attributes = null;
+        if ($attributes === null) {
+            if (class_exists('N2Settings', false)) {
+                $value       = trim(html_entity_decode(strip_tags(N2Settings::get('scriptattributes', ''))));
+                $_attributes = explode(' ', str_replace('\'', "", str_replace("\"", "", $value)));
+                if (!empty($value) && !empty($_attributes)) {
+                    foreach ($_attributes AS $attr) {
+                        if (strpos($attr, '=') !== false) {
+                            $atts = explode("=", $attr);
+                            if (count($atts) <= 2) {
+                                $attributes[$atts[0]] = $atts[1];
+                            } else {
+                                $attributes[$attr] = $attr;
+                            }
+                        } else {
+                            $attributes[$attr] = $attr;
+                        }
+                    }
+                } else {
+                    $attributes = array();
+                }
+            } else {
+                return array();
+            }
+        }
+        return $attributes;
     }
 
 }

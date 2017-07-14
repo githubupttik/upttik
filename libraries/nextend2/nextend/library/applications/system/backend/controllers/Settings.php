@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2SystemBackendSettingsController extends N2BackendController
 {
@@ -38,19 +31,6 @@ class N2SystemBackendSettingsController extends N2BackendController
             $this->render();
         } else {
             $this->noAccess();
-        }
-    }
-
-    /**
-     * Delete all cached js/css files
-     */
-    public function actionClearCache() {
-        if ($this->canDo('nextend_config')) {
-
-            debug_print_backtrace();
-            die('do this method');
-
-            N2Request::redirect($this->appType->router->createUrl(array("settings/index")));
         }
     }
 

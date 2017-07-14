@@ -7,7 +7,7 @@
         <rect id="path-1" x="0" y="0" width="385" height="266"></rect>
         <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-3">
             <feOffset dx="2" dy="2" in="SourceAlpha" result="shadowOffsetInner1"></feOffset>
-            <feGaussianBlur stdDeviation="0" in="shadowOffsetInner1" result="shadowBlurInner1"></feGaussianBlur>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetInner1" result="shadowBlurInner1"></feGaussianBlur>
             <feComposite in="shadowBlurInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
             <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.243478261 0" in="shadowInnerInner1" type="matrix" result="shadowMatrixInner1"></feColorMatrix>
             <feMerge>
@@ -17,7 +17,7 @@
         </filter>
         <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-4">
             <feOffset dx="-2" dy="2" in="SourceAlpha" result="shadowOffsetInner1"></feOffset>
-            <feGaussianBlur stdDeviation="0" in="shadowOffsetInner1" result="shadowBlurInner1"></feGaussianBlur>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetInner1" result="shadowBlurInner1"></feGaussianBlur>
             <feComposite in="shadowBlurInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
             <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.245 0" in="shadowInnerInner1" type="matrix" result="shadowMatrixInner1"></feColorMatrix>
             <feMerge>

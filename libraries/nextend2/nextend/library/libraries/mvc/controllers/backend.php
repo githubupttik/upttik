@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2BackendController extends N2Controller
 {
@@ -18,6 +11,10 @@ class N2BackendController extends N2Controller
 
         N2AssetsPredefined::frontend();
         N2AssetsPredefined::backend();
+      if (N2Settings::get('show-joomla-admin-footer', 0)) {
+      	N2CSS::addInline('body #status{display:block;}');
+      }
+    
 
         $this->appType->app->info->assetsBackend();
 

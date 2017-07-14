@@ -1655,8 +1655,8 @@ a {
 }
 #rt-header,
 #rt-top {
-  z-index: 2;
   position: relative;
+  z-index: 20000;
 }
 .menu-block {
   padding: 0;

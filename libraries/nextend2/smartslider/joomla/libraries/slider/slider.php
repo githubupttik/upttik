@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2SmartSlider extends N2SmartSliderAbstract
 {
@@ -50,9 +43,7 @@ class N2SmartSlider extends N2SmartSliderAbstract
     }
 
     public function addCMSFunctions($slider) {
-        $slider = JHTML::_('content.prepare', $slider);
-
-        return $slider;
+        return JHTML::_('content.prepare', '<div>'.$slider.'</div>', null, 'mod_smartslider');
     }
 
 

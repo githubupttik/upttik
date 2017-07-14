@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 /*
  * oauth_client.php
  *
@@ -107,8 +100,7 @@ N2Loader::import('libraries.oauth.http');
 {/metadocument}
 */
 
-class N2OAuth
-{
+class N2OAuth {
 
     /*
     {metadocument}
@@ -2435,7 +2427,7 @@ class N2OAuth
                         <br>Authorization error: <?php echo HtmlSpecialChars($this->authorization_error);
                     }
                     ?></p>
-            <?php
+                <?php
             } elseif (strlen($this->access_token_error)) {
                 ?>
                 <p>It was not possible to use the application access token.
@@ -2445,7 +2437,7 @@ class N2OAuth
                         <br>Error: <?php echo HtmlSpecialChars($this->access_token_error);
                     }
                     ?></p>
-            <?php
+                <?php
             } elseif (strlen($this->access_token)) {
                 ?>
                 <p>The application authorization was obtained successfully.
@@ -2463,13 +2455,13 @@ class N2OAuth
                 if (strlen($this->access_token_expiry)) {
                     ?>
                     <p>Access token expiry: <?php echo $this->access_token_expiry; ?> UTC</p>
-                <?php
+                    <?php
                 }
             }
             ?>
             </body>
             </html>
-        <?php
+            <?php
         }
     }
     /*

@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2AssetsGoogleFonts extends N2AssetsAbstract
-{
+class N2AssetsGoogleFonts extends N2AssetsAbstract {
 
     function addSubset($subset = 'latin') {
         if (!in_array($subset, $this->inline)) {
@@ -39,9 +31,8 @@ class N2AssetsGoogleFonts extends N2AssetsAbstract
         }
         $subsets = array_unique($this->inline);
         $familyQuery[count($familyQuery) - 1] .= ':' . implode(',', $subsets);
-        N2JS::addFiles(N2LIBRARYASSETS . "/js", array(
-            'webfontloader.js',
-        ), 'nextend-webfontloader');
+        N2JS::addStaticGroup(N2LIBRARYASSETS . "/dist/nextend-webfontloader.min.js", 'nextend-webfontloader');
+    
 
         N2JS::addInline("
         nextend.fontsLoaded = false;
@@ -53,6 +44,24 @@ class N2AssetsGoogleFonts extends N2AssetsAbstract
             active: function(){nextend.fontsLoadedActive()},
             inactive: function(){nextend.fontsLoadedActive()}
         };
+        if(typeof WebFontConfig !== 'undefined'){
+            var _WebFontConfig = WebFontConfig;
+            for(var k in WebFontConfig){
+                if(k == 'active'){
+                  fontData.active = function(){nextend.fontsLoadedActive();_WebFontConfig.active();}
+                }else if(k == 'inactive'){
+                  fontData.inactive = function(){nextend.fontsLoadedActive();_WebFontConfig.inactive();}
+                }else if(k == 'google'){
+                    if(typeof WebFontConfig.google.families !== 'undefined'){
+                        for(var i = 0; i < WebFontConfig.google.families.length; i++){
+                            fontData.google.families.push(WebFontConfig.google.families[i]);
+                        }
+                    }
+                }else{
+                    fontData[k] = WebFontConfig[k];
+                }
+            }
+        }
         if(typeof WebFont === 'undefined'){
             window.WebFontConfig = fontData;
         }else{
@@ -68,6 +77,14 @@ class N2AssetsGoogleFonts extends N2AssetsAbstract
                 nextend.fontsLoaded = true;
                 nextend.fontsDeferred.resolve();
             };
+            var intercalCounter = 0;
+            nextend.fontInterval = setInterval(function(){
+                if(intercalCounter > 3 || document.documentElement.className.indexOf('wf-active') !== -1){
+                    nextend.fontsLoadedActive();
+                    clearInterval(nextend.fontInterval);
+                }
+                intercalCounter++;
+            }, 1000);
         }", true);
     }
 }

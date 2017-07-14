@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 if (!defined("N2_PLATFORM_LIBRARY")) define('N2_PLATFORM_LIBRARY', dirname(__FILE__));
 
 define('N2WORDPRESS', 0);
@@ -18,8 +11,12 @@ if (!defined('N2PRO')) {
 
 }
 
-if (!defined('JPATH_IMAGES')) {
-    define('JPATH_IMAGES', '/' . trim(JComponentHelper::getParams('com_media')
+// Load required UTF-8 config from Joomla
+jimport( 'joomla.utilities.string' );
+class_exists('JString');
+
+if (!defined('JPATH_NEXTEND_IMAGES')) {
+    define('JPATH_NEXTEND_IMAGES', '/' . trim(JComponentHelper::getParams('com_media')
                                                       ->get('image_path', 'images'), "/"));
 }
 

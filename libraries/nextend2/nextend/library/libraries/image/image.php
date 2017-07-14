@@ -1,16 +1,8 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 N2Loader::import('libraries.cache.image');
 
-class N2Image extends N2CacheImage
-{
+class N2Image extends N2CacheImage {
 
     public function __construct($group) {
         parent::__construct($group, true);
@@ -34,9 +26,10 @@ class N2Image extends N2CacheImage
         return $filePath;
     }
 
-    public static function resizeImage($group, $imageUrl, $targetWidth, $targetHeight, $mode = 'cover', $backgroundColor = false, $resizeRemote = false) {
+    public static function resizeImage($group, $imageUrl, $targetWidth, $targetHeight, $mode = 'cover', $backgroundColor = false, $resizeRemote = false, $quality = 100, $optimize = false, $x = 50, $y = 50) {
+        $quality          = max(0, min(100, $quality));
         $originalImageUrl = $imageUrl;
-        if ($targetWidth > 0 && $targetHeight > 0 && function_exists('exif_imagetype') && function_exists('imagecreatefrompng')) {
+        if ($targetWidth > 0 && $targetHeight > 0 && function_exists('imagecreatefrompng')) {
 
             if (substr($imageUrl, 0, 2) == '//') {
                 $imageUrl = parse_url(N2Uri::getBaseuri(), PHP_URL_SCHEME) . ':' . $imageUrl;
@@ -67,12 +60,16 @@ class N2Image extends N2CacheImage
                     $targetWidth,
                     $targetHeight,
                     $mode,
-                    $backgroundColor
+                    $backgroundColor,
+                    $quality,
+                    $optimize,
+                    $x,
+                    $y
                 )));
 
             } else {
                 $extension = false;
-                $imageType = @exif_imagetype($imagePath);
+                $imageType = @N2Image::exif_imagetype($imagePath);
                 switch ($imageType) {
                     case IMAGETYPE_JPEG:
                         $extension = 'jpg';
@@ -82,7 +79,7 @@ class N2Image extends N2CacheImage
                         break;
                 }
                 if (!$extension) {
-                    throw new Exception('Filtype of the image is not supported: #' . $imageType . ' code  ' . $imagePath);
+                    return $originalImageUrl;
                 }
                 return N2Filesystem::pathToAbsoluteURL($cache->makeCache($extension, array(
                     $cache,
@@ -94,23 +91,27 @@ class N2Image extends N2CacheImage
                     $targetHeight,
                     $mode,
                     $backgroundColor,
-                    filemtime($imagePath)
+                    $quality,
+                    $optimize,
+                    $x,
+                    $y
                 )));
             }
         }
     }
 
-    protected function _resizeRemoteImage($filePath, $extension, $imageUrl, $targetWidth, $targetHeight, $mode, $backgroundColor) {
-        $this->_resizeImage($filePath, $extension, $imageUrl, $targetWidth, $targetHeight, $mode, $backgroundColor);
+    protected function _resizeRemoteImage($filePath, $extension, $imageUrl, $targetWidth, $targetHeight, $mode, $backgroundColor, $quality, $optimize, $x, $y) {
+        $this->_resizeImage($filePath, $extension, $imageUrl, $targetWidth, $targetHeight, $mode, $backgroundColor, $quality, $optimize, $x, $y);
     }
 
-    protected function _resizeImage($filePath, $extension, $imagePath, $targetWidth, $targetHeight, $mode, $backgroundColor, $originalFileModified = null) {
+    protected function _resizeImage($filePath, $extension, $imagePath, $targetWidth, $targetHeight, $mode, $backgroundColor, $quality = 100, $optimize = false, $x = 50, $y = 50) {
+        $rotated = false;
         if ($extension == 'png') {
             $image = @imagecreatefrompng($imagePath);
         } else if ($extension == 'jpg') {
             $image = @imagecreatefromjpeg($imagePath);
             if (function_exists("exif_read_data")) {
-                $exif = exif_read_data($imagePath);
+                $exif = @exif_read_data($imagePath);
 
                 $rotated = $this->getOrientation($exif, $image);
                 if ($rotated) {
@@ -120,9 +121,28 @@ class N2Image extends N2CacheImage
             }
         }
 
-        if ($image) {
+        if (isset($image) && $image) {
             $originalWidth  = imagesx($image);
             $originalHeight = imagesy($image);
+
+            if ($optimize) {
+
+                if ($originalWidth <= $targetWidth || $originalHeight <= $targetHeight) {
+                    if ($extension == 'png') {
+                        imagepng($image, $filePath);
+                    } else if ($extension == 'jpg') {
+                        imagejpeg($image, $filePath, $quality);
+                    }
+                    imagedestroy($image);
+                    return true;
+                }
+
+                if ($originalWidth / $targetWidth > $originalHeight / $targetHeight) {
+                    $targetWidth = $originalWidth / ($originalHeight / $targetHeight);
+                } else {
+                    $targetHeight = $originalHeight / ($originalWidth / $targetWidth);
+                }
+            }
             if ($rotated || $originalWidth != $targetWidth || $originalHeight != $targetHeight) {
                 $newImage = imagecreatetruecolor($targetWidth, $targetHeight);
                 if ($extension == 'png') {
@@ -136,7 +156,7 @@ class N2Image extends N2CacheImage
                     imagefilledrectangle($newImage, 0, 0, $targetWidth, $targetHeight, $background);
                 }
 
-                list($dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) = $this->imageMode($targetWidth, $targetHeight, $originalWidth, $originalHeight, $mode);
+                list($dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) = $this->imageMode($targetWidth, $targetHeight, $originalWidth, $originalHeight, $mode, $x, $y);
                 imagecopyresampled($newImage, $image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
                 imagedestroy($image);
 
@@ -147,7 +167,7 @@ class N2Image extends N2CacheImage
             if ($extension == 'png') {
                 imagepng($newImage, $filePath);
             } else if ($extension == 'jpg') {
-                imagejpeg($newImage, $filePath, 100);
+                imagejpeg($newImage, $filePath, $quality);
             }
             imagedestroy($newImage);
             return true;
@@ -156,10 +176,11 @@ class N2Image extends N2CacheImage
         throw new Exception('Unable to resize image: ' . $imagePath);
     }
 
-    public static function scaleImage($group, $imageUrl, $scale = 1, $resizeRemote = false) {
+    public static function scaleImage($group, $imageUrl, $scale = 1, $resizeRemote = false, $quality = 100) {
+        $quality          = max(0, min(100, $quality));
         $originalImageUrl = $imageUrl;
         $imageUrl         = N2ImageHelper::fixed($imageUrl);
-        if ($scale > 0 && function_exists('exif_imagetype') && function_exists('imagecreatefrompng')) {
+        if ($scale > 0 && function_exists('imagecreatefrompng')) {
 
             if (substr($imageUrl, 0, 2) == '//') {
                 $imageUrl = parse_url(N2Uri::getBaseuri(), PHP_URL_SCHEME) . ':' . $imageUrl;
@@ -186,12 +207,13 @@ class N2Image extends N2CacheImage
                 ), array(
                     $extension,
                     $imageUrl,
-                    $scale
+                    $scale,
+                    $quality
                 ))));
 
             } else {
                 $extension = false;
-                $imageType = @exif_imagetype($imagePath);
+                $imageType = @N2Image::exif_imagetype($imagePath);
                 switch ($imageType) {
                     case IMAGETYPE_JPEG:
                         $extension = 'jpg';
@@ -209,7 +231,7 @@ class N2Image extends N2CacheImage
                         break;
                 }
                 if (!$extension) {
-                    throw new Exception('Filtype of the image is not supported: #' . $imageType . ' code  ' . $imagePath);
+                    return $originalImageUrl;
                 }
                 return N2ImageHelper::dynamic(N2Filesystem::pathToAbsoluteURL($cache->makeCache($extension, array(
                     $cache,
@@ -218,17 +240,17 @@ class N2Image extends N2CacheImage
                     $extension,
                     $imagePath,
                     $scale,
-                    filemtime($imagePath)
+                    $quality
                 ))));
             }
         }
     }
 
-    protected function _scaleRemoteImage($filePath, $extension, $imageUrl, $scale) {
-        $this->_scaleImage($filePath, $extension, $imageUrl, $scale);
+    protected function _scaleRemoteImage($filePath, $extension, $imageUrl, $scale, $quality) {
+        $this->_scaleImage($filePath, $extension, $imageUrl, $scale, $quality);
     }
 
-    protected function _scaleImage($filePath, $extension, $imagePath, $scale, $originalFileModified = null) {
+    protected function _scaleImage($filePath, $extension, $imagePath, $scale, $quality = 100) {
         if ($extension == 'png') {
             $image = @imagecreatefrompng($imagePath);
         } else if ($extension == 'jpg') {
@@ -269,7 +291,7 @@ class N2Image extends N2CacheImage
             if ($extension == 'png') {
                 imagepng($newImage, $filePath);
             } else if ($extension == 'jpg') {
-                imagejpeg($newImage, $filePath, 100);
+                imagejpeg($newImage, $filePath, $quality);
             }
             imagedestroy($newImage);
             return true;
@@ -299,7 +321,7 @@ class N2Image extends N2CacheImage
         return false;
     }
 
-    private function imageMode($width, $height, $originalWidth, $OriginalHeight, $mode = 'cover') {
+    private function imageMode($width, $height, $originalWidth, $OriginalHeight, $mode = 'cover', $x = 50, $y = 50) {
         $dst_x           = 0;
         $dst_y           = 0;
         $src_x           = 0;
@@ -313,21 +335,21 @@ class N2Image extends N2CacheImage
         if ($mode == 'cover') {
             if ($horizontalRatio > $verticalRatio) {
                 $new_h = $horizontalRatio * $OriginalHeight;
-                $dst_y = ($height - $new_h) / 2;
+                $dst_y = ($height - $new_h) / 2 * $y / 50;
                 $dst_h = $new_h;
             } else {
                 $new_w = $verticalRatio * $originalWidth;
-                $dst_x = ($width - $new_w) / 2;
+                $dst_x = ($width - $new_w) / 2 * $x / 50;
                 $dst_w = $new_w;
             }
         } else if ($mode == 'contain') {
             if ($horizontalRatio < $verticalRatio) {
                 $new_h = $horizontalRatio * $OriginalHeight;
-                $dst_y = ($height - $new_h) / 2;
+                $dst_y = ($height - $new_h) / 2 * $y / 50;
                 $dst_h = $new_h;
             } else {
                 $new_w = $verticalRatio * $originalWidth;
-                $dst_x = ($width - $new_w) / 2;
+                $dst_x = ($width - $new_w) / 2 * $x / 50;
                 $dst_w = $new_w;
             }
         }
@@ -347,7 +369,8 @@ class N2Image extends N2CacheImage
         static $validExtensions = array(
             'png'  => 'png',
             'jpg'  => 'jpg',
-            'jpeg' => 'jpg'
+            'jpeg' => 'jpg',
+            'gif'  => 'gif'
         );
         $extension = strtolower($extension);
         if (isset($validExtensions[$extension])) {
@@ -368,14 +391,15 @@ class N2Image extends N2CacheImage
         }
         return N2ImageHelper::fixed($image);
     }
-}
 
-if (!function_exists('exif_imagetype')) {
-
-    function exif_imagetype($filename) {
-        if ((list($width, $height, $type, $attr) = getimagesize($filename)) !== false) {
-            return $type;
+    public static function exif_imagetype($filename) {
+        if (!function_exists('exif_imagetype')) {
+            if ((list($width, $height, $type, $attr) = getimagesize($filename)) !== false) {
+                return $type;
+            }
+            return false;
         }
-        return false;
+
+        return exif_imagetype($filename);
     }
 }

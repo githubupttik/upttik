@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2ImageAviary
-{
+class N2ImageAviary {
 
     private static $config = array(
         'public' => '',
@@ -102,6 +94,7 @@ class N2ImageAviary
     }
 
     public static function getHighResolutionAuth() {
+        self::loadSettings();
         $timestamp = time();
         $salt      = uniqid(mt_rand(), true);
         $signature = sha1(self::$config['public'] . self::$config['secret'] . $timestamp . $salt);

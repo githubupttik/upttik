@@ -1,16 +1,8 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 N2Loader::import('libraries.plugins.N2SliderWidgetAbstract', 'smartslider');
 
-class N2SSPluginWidgetAutoplayImage extends N2SSPluginWidgetAbstract
-{
+class N2SSPluginWidgetAutoplayImage extends N2SSPluginWidgetAbstract {
 
     private static $key = 'widget-autoplay-';
 
@@ -113,9 +105,11 @@ class N2SSPluginWidgetAutoplayImage extends N2SSPluginWidgetAbstract
 
         if ($play && $pause) {
 
-            N2CSS::addFile(N2Filesystem::translate(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR . 'style.css'), $id);
-
-            N2JS::addFile(N2Filesystem::translate(dirname(__FILE__) . '/image/autoplay.js'), $id);
+            N2LESS::addFile(N2Filesystem::translate(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR . 'style.n2less'), $slider->cacheId, array(
+                "sliderid" => $slider->elementId
+            ), NEXTEND_SMARTSLIDER_ASSETS . '/less' . NDS);
+            N2JS::addFile(N2Filesystem::translate(dirname(__FILE__) . '/image/autoplay.min.js'), $id);
+        
 
             list($displayClass, $displayAttributes) = self::getDisplayAttributes($params, self::$key);
 
@@ -125,12 +119,22 @@ class N2SSPluginWidgetAutoplayImage extends N2SSPluginWidgetAbstract
             list($style, $attributes) = self::getPosition($params, self::$key);
 
 
-            N2JS::addInline('new NextendSmartSliderWidgetAutoplayImage("' . $id . '", ' . floatval($params->get(self::$key . 'responsive-desktop')) . ', ' . floatval($params->get(self::$key . 'responsive-tablet')) . ', ' . floatval($params->get(self::$key . 'responsive-mobile')) . ');');
+            N2JS::addInline('new N2Classes.SmartSliderWidgetAutoplayImage("' . $id . '", ' . n2_floatval($params->get(self::$key . 'responsive-desktop')) . ', ' . n2_floatval($params->get(self::$key . 'responsive-tablet')) . ', ' . n2_floatval($params->get(self::$key . 'responsive-mobile')) . ');');
 
-            $html = NHtml::tag('div', $displayAttributes + $attributes + array(
-                    'class' => $displayClass . $styleClass . 'nextend-autoplay nextend-autoplay-image',
-                    'style' => $style
-                ), NHtml::image($play, '', array('class' => 'nextend-autoplay-play')) . NHtml::image($pause, '', array('class' => 'nextend-autoplay-pause')));
+            $html = N2Html::tag('div', $displayAttributes + $attributes + array(
+                    'class' => $displayClass . $styleClass . 'nextend-autoplay n2-ib n2-ow nextend-autoplay-image',
+                    'style' => $style,
+                    'role' => 'button',
+                    'aria-label' => 'Pause autoplay'
+                ), N2Html::image($play, 'Play', array(
+                    'class'        => 'nextend-autoplay-play n2-ow',
+                    'data-no-lazy' => '1',
+                    'tabindex' => '0'
+                )) . N2Html::image($pause, 'Pause', array(
+                    'class'        => 'nextend-autoplay-pause n2-ow',
+                    'data-no-lazy' => '1',
+                    'tabindex' => '0'
+                )));
         }
 
         return $html;

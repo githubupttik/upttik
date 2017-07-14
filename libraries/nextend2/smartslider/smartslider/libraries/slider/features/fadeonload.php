@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2SmartSliderFeatureFadeOnLoad
 {
@@ -22,11 +15,9 @@ class N2SmartSliderFeatureFadeOnLoad
 
         $this->slider = $slider;
 
-        $this->fadeOnLoad   = intval($slider->params->get('fadeOnLoad', 1));
-        $this->fadeOnScroll = intval($slider->params->get('fadeOnScroll', 0));
+        $this->fadeOnLoad      = intval($slider->params->get('fadeOnLoad', 1));
+        $this->fadeOnScroll    = intval($slider->params->get('fadeOnScroll', 0));
         $this->playWhenVisible = intval($slider->params->get('playWhenVisible', 1));
-
-
 
         if (!empty($this->fadeOnScroll) && $this->fadeOnScroll) {
             $this->fadeOnLoad   = 1;
@@ -55,7 +46,7 @@ class N2SmartSliderFeatureFadeOnLoad
 
             if (N2SystemHelper::testMemoryLimit()) {
                 if ($sizes['width'] + $sizes['marginHorizontal'] > 0 && $sizes['height'] > 0 && function_exists('imagecreatetruecolor')) {
-                    return NHtml::tag("div", array(
+                    return N2Html::tag("div", array(
                         "id"     => $this->slider->elementId . "-placeholder",
                         "encode" => false,
                         "style"  => 'position: relative;z-index:2;'
@@ -65,7 +56,7 @@ class N2SmartSliderFeatureFadeOnLoad
                 }
 
             } else {
-                N2Message::error(n2_("It seems like the <a href='http://php.net/manual/en/ini.core.php#ini.memory-limit'>memory_limit</a> on the server is too low for the fade on load feature. Please set it minimum 60M and reload the page! You can disable this message in <a href='" . N2Form::$documentation . "#Troubleshooting-G-Server'>global configuration</a> 'Frontend debug message' option."));
+                N2Message::error(n2_("It seems like the <a href='http://php.net/manual/en/ini.core.php#ini.memory-limit'>memory_limit</a> on the server is too low for the fade on load feature. Please set it minimum 60M and reload the page!"));
             }
         } else {
             N2CSS::addCode("#{$this->slider->elementId}.n2-ss-load-fade{position: relative !important;}", $this->slider->cacheId);
@@ -74,7 +65,7 @@ class N2SmartSliderFeatureFadeOnLoad
     }
 
     public function makeJavaScriptProperties(&$properties) {
-        $properties['load'] = array(
+        $properties['load']            = array(
             'fade'   => $this->fadeOnLoad,
             'scroll' => ($this->fadeOnScroll & !$this->slider->isAdmin)
         );
@@ -83,13 +74,15 @@ class N2SmartSliderFeatureFadeOnLoad
 
 
     private function makeImage($sizes) {
-        $html = NHtml::image("data:image/svg+xml;base64," . $this->transparentImage($sizes['width'] + $sizes['marginHorizontal'], $sizes['height']), '', array(
-            'style' => 'width: 100%; max-width:' . ($this->slider->features->responsive->maximumSlideWidth + $sizes['marginHorizontal']) . 'px;'
+        $html = N2Html::image("data:image/svg+xml;base64," . $this->transparentImage($sizes['width'] + $sizes['marginHorizontal'], $sizes['height']), 'Slider', array(
+            'style' => 'width: 100%; max-width:' . ($this->slider->features->responsive->maximumSlideWidth + $sizes['marginHorizontal']) . 'px; display: block;',
+            'class' => 'n2-ow'
         ));
 
         if ($sizes['marginVertical'] > 0) {
-            $html .= NHtml::image("data:image/svg+xml;base64," . $this->transparentImage($sizes['width'] + $sizes['marginHorizontal'], $sizes['marginVertical']), '', array(
-                'style' => 'width: 100%;'
+            $html .= N2Html::image("data:image/svg+xml;base64," . $this->transparentImage($sizes['width'] + $sizes['marginHorizontal'], $sizes['marginVertical']), 'Slider', array(
+                'style' => 'width: 100%;',
+                'class' => 'n2-ow'
             ));
         }
 

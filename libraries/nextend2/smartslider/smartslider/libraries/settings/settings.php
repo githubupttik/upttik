@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2SmartSliderSettings
 {
@@ -17,7 +10,7 @@ class N2SmartSliderSettings
     static function getAll() {
         if (self::$settings === null) {
             self::$settings = json_decode(N2Base::getApplication('smartslider')->storage->get(self::$_type), true);
-            if (self::$settings === null) self::$settings = array();
+            if (self::$settings === null || !is_array(self::$settings)) self::$settings = array();
         }
         return self::$settings;
     }

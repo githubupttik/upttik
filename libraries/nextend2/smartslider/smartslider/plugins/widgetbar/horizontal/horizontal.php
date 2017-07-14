@@ -1,17 +1,9 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 N2Loader::import('libraries.plugins.N2SliderWidgetAbstract', 'smartslider');
 N2Loader::import('libraries.image.color');
 
-class N2SSPluginWidgetBarHorizontal extends N2SSPluginWidgetAbstract
-{
+class N2SSPluginWidgetBarHorizontal extends N2SSPluginWidgetAbstract {
 
     private static $key = 'widget-bar-';
 
@@ -23,6 +15,7 @@ class N2SSPluginWidgetBarHorizontal extends N2SSPluginWidgetAbstract
             'widget-bar-position-area'    => 10,
             'widget-bar-position-offset'  => 30,
             'widget-bar-style'            => 'eyJuYW1lIjoiU3RhdGljIiwiZGF0YSI6W3siYmFja2dyb3VuZGNvbG9yIjoiMDAwMDAwYWIiLCJwYWRkaW5nIjoiNXwqfDIwfCp8NXwqfDIwfCp8cHgiLCJib3hzaGFkb3ciOiIwfCp8MHwqfDB8KnwwfCp8MDAwMDAwZmYiLCJib3JkZXIiOiIwfCp8c29saWR8KnwwMDAwMDBmZiIsImJvcmRlcnJhZGl1cyI6IjQwIiwiZXh0cmEiOiIifV19',
+            'widget-bar-show-title'       => 1,
             'widget-bar-font-title'       => 'eyJuYW1lIjoiU3RhdGljIiwiZGF0YSI6W3siY29sb3IiOiJmZmZmZmZmZiIsInNpemUiOiIxNHx8cHgiLCJ0c2hhZG93IjoiMHwqfDB8KnwwfCp8MDAwMDAwYzciLCJhZm9udCI6Ik1vbnRzZXJyYXQiLCJsaW5laGVpZ2h0IjoiMS4zIiwiYm9sZCI6MCwiaXRhbGljIjowLCJ1bmRlcmxpbmUiOjAsImFsaWduIjoibGVmdCIsImV4dHJhIjoidmVydGljYWwtYWxpZ246IG1pZGRsZTsifSx7ImNvbG9yIjoiZmMyODI4ZmYiLCJhZm9udCI6Imdvb2dsZShAaW1wb3J0IHVybChodHRwOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzP2ZhbWlseT1SYWxld2F5KTspLEFyaWFsIiwic2l6ZSI6IjI1fHxweCJ9LHt9XX0=',
             'widget-bar-show-description' => 1,
             'widget-bar-font-description' => 'eyJuYW1lIjoiU3RhdGljIiwiZGF0YSI6W3siY29sb3IiOiJmZmZmZmZmZiIsInNpemUiOiIxNHx8cHgiLCJ0c2hhZG93IjoiMHwqfDB8KnwwfCp8MDAwMDAwYzciLCJhZm9udCI6Ik1vbnRzZXJyYXQiLCJsaW5laGVpZ2h0IjoiMS4zIiwiYm9sZCI6MCwiaXRhbGljIjoxLCJ1bmRlcmxpbmUiOjAsImFsaWduIjoibGVmdCIsImV4dHJhIjoidmVydGljYWwtYWxpZ246IG1pZGRsZTsifSx7ImNvbG9yIjoiZmMyODI4ZmYiLCJhZm9udCI6Imdvb2dsZShAaW1wb3J0IHVybChodHRwOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzP2ZhbWlseT1SYWxld2F5KTspLEFyaWFsIiwic2l6ZSI6IjI1fHxweCJ9LHt9XX0=',
@@ -50,6 +43,7 @@ class N2SSPluginWidgetBarHorizontal extends N2SSPluginWidgetAbstract
             self::$key . 'position-',
             'bar'
         );
+
         return $positions;
     }
 
@@ -62,8 +56,11 @@ class N2SSPluginWidgetBarHorizontal extends N2SSPluginWidgetAbstract
      */
     static function render($slider, $id, $params) {
 
-        N2CSS::addFile(N2Filesystem::translate(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'horizontal' . DIRECTORY_SEPARATOR . 'style.css'), $id);
-        N2JS::addFile(N2Filesystem::translate(dirname(__FILE__) . '/horizontal/bar.js'), $id);
+        N2LESS::addFile(N2Filesystem::translate(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'horizontal' . DIRECTORY_SEPARATOR . 'style.n2less'), $slider->cacheId, array(
+            "sliderid" => $slider->elementId
+        ), NEXTEND_SMARTSLIDER_ASSETS . '/less' . NDS);
+        N2JS::addFile(N2Filesystem::translate(dirname(__FILE__) . '/horizontal/bar.min.js'), $id);
+    
 
         list($displayClass, $displayAttributes) = self::getDisplayAttributes($params, self::$key);
 
@@ -89,15 +86,27 @@ class N2SSPluginWidgetBarHorizontal extends N2SSPluginWidgetAbstract
         }
 
         $separator       = $params->get(self::$key . 'separator');
+        $showTitle       = intval($params->get(self::$key . 'show-title'));
         $showDescription = intval($params->get(self::$key . 'show-description'));
         $slides          = array();
         for ($i = 0; $i < count($slider->slides); $i++) {
-            $slides[$i] = NHtml::tag('span', array('class' => $fontTitle), $slider->slides[$i]->getTitle());
+
+            $html = '';
+            if ($showTitle) {
+                $html .= N2Html::tag('span', array(
+                    'class' => $fontTitle . ' n2-ow'
+                ), N2Translation::_($slider->slides[$i]->getTitle()));
+            }
 
             $description = $slider->slides[$i]->getDescription();
             if ($showDescription && !empty($description)) {
-                $slides[$i] .= NHtml::tag('span', array('class' => $fontDescription), $separator . $description);
+                $html .= N2Html::tag('span', array('class' => $fontDescription . ' n2-ow'), (!empty($html) ? $separator : '') . N2Translation::_($description));
             }
+
+            $slides[$i] = array(
+                'html'    => $html,
+                'hasLink' => $slider->slides[$i]->hasLink
+            );
         }
 
         $parameters = array(
@@ -106,15 +115,15 @@ class N2SSPluginWidgetBarHorizontal extends N2SSPluginWidgetAbstract
             'animate' => intval($params->get(self::$key . 'animate'))
         );
 
-        N2JS::addInline('new NextendSmartSliderWidgetBarHorizontal("' . $id . '", ' . json_encode($slides) . ', ' . json_encode($parameters) . ');');
+        N2JS::addInline('new N2Classes.SmartSliderWidgetBarHorizontal("' . $id . '", ' . json_encode($slides) . ', ' . json_encode($parameters) . ');');
 
-        return NHtml::tag("div", $displayAttributes + $attributes + array(
-                "class" => $displayClass . "nextend-bar nextend-bar-horizontal",
+        return N2Html::tag("div", $displayAttributes + $attributes + array(
+                "class" => $displayClass . "nextend-bar nextend-bar-horizontal n2-ow",
                 "style" => $style
-            ), NHtml::tag("div", array(
-            "class" => $styleClass,
-            "style" => $innerStyle
-        ), $slides[$slider->_activeSlide]));
+            ), N2Html::tag("div", array(
+            "class" => $styleClass . ' n2-ow',
+            "style" => $innerStyle . ($slides[$slider->_activeSlide]['hasLink'] ? 'cursor:pointer;' : '')
+        ), $slides[$slider->_activeSlide]['html']));
     }
 
     public static function prepareExport($export, $params) {
@@ -131,8 +140,7 @@ class N2SSPluginWidgetBarHorizontal extends N2SSPluginWidgetAbstract
     }
 }
 
-class N2SSPluginWidgetBarHorizontalFull extends N2SSPluginWidgetBarHorizontal
-{
+class N2SSPluginWidgetBarHorizontalFull extends N2SSPluginWidgetBarHorizontal {
 
     var $_name = 'horizontalFull';
 

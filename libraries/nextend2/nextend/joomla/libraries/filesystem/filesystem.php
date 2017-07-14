@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 jimport('joomla.filesystem.file');
 jimport('joomla.filesystem.folder');
@@ -17,9 +10,14 @@ class N2Filesystem extends N2FilesystemAbstract
 {
 
     public function __construct() {
-        $this->_basepath    = realpath(JPATH_SITE == '' ? '' : JPATH_SITE . NDS);
+        $this->_basepath    = realpath(JPATH_SITE == '' ? NDS : JPATH_SITE . NDS);
+        if($this->_basepath == NDS){
+            $this->_basepath = '';
+        }
         $this->_cachepath   = realpath(JPATH_CACHE);
         $this->_librarypath = str_replace($this->_basepath, '', N2LIBRARY);
+        
+        self::measurePermission($this->_basepath . '/media/');
     }
 
     public static function getWebCachePath() {
@@ -35,8 +33,8 @@ class N2Filesystem extends N2FilesystemAbstract
 
     public static function getImagesFolder() {
         $i = N2Filesystem::getInstance();
-        if(defined('JPATH_IMAGES')){
-            return $i->_basepath . JPATH_IMAGES;
+        if(defined('JPATH_NEXTEND_IMAGES')){
+            return $i->_basepath . JPATH_NEXTEND_IMAGES;
         }
         return $i->_basepath . '/images';
     }

@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2TopBar extends N2EmbedWidget implements N2EmbedWidgetInterface
-{
+class N2TopBar extends N2EmbedWidget implements N2EmbedWidgetInterface {
 
     public static $params = array(
         'menu'         => array(),
@@ -18,7 +10,8 @@ class N2TopBar extends N2EmbedWidget implements N2EmbedWidgetInterface
         'expert'       => true,
         'notification' => true,
         'hideSidebar'  => false,
-        'back'         => false
+        'back'         => false,
+        'middle'       => ''
     );
 
     public function run($params) {

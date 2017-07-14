@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2Platform
 {
@@ -34,13 +27,13 @@ class N2Platform
     }
 
     public static function getDate() {
-        return JFactory::getDate()
-                       ->toSql();
+        $config = JFactory::getConfig();
+        return JFactory::getDate('now',$config->get('offset'))
+                       ->toSql(true);
     }
 
     public static function getTime() {
-        return JFactory::getDate()
-                       ->toUnix();
+        return strtotime(N2Platform::getDate());
     }
 
     public static function getPublicDir() {
@@ -48,6 +41,10 @@ class N2Platform
             return JPATH_SITE . JPATH_MEDIA;
         }
         return JPATH_SITE . '/media';
+    }
+
+    public static function getUserEmail() {
+        return JFactory::getUser()->email;
     }
 
     public static function adminHideCSS() {

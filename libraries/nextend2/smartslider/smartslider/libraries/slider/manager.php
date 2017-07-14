@@ -1,21 +1,14 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2SmartSliderManager
-{
+class N2SmartSliderManager {
 
     protected $usage = 'Unknown';
 
     public $slider;
 
-    public function __construct($sliderId, $backend = false, $parameters = array()) {
+    public $nextCacheRefresh;
 
+    public function __construct($sliderId, $backend = false, $parameters = array()) {
 
         if ($backend) {
             N2Loader::import("libraries.slider.backend", "smartslider");
@@ -41,7 +34,6 @@ class N2SmartSliderManager
             return $this->slider->render();
         }
         N2Loader::import("libraries.slider.cache.slider", "smartslider");
-
         return $this->slider->addCMSFunctions($this->cacheSlider());
     }
 
@@ -49,13 +41,15 @@ class N2SmartSliderManager
         $cache        = new N2CacheManifestSlider($this->slider->cacheId, array(
             'slider' => $this->slider
         ));
-        $cachedSlider = $cache->makeCache('slider', '', array(
+        $cachedSlider = $cache->makeCache('slider' . N2Translation::getCurrentLocale(), '', array(
             $this,
             'renderCachedSlider'
         ));
 
+        $this->nextCacheRefresh = $cache->getData('nextCacheRefresh', false);
+
         if ($cachedSlider === false) {
-            return '<h3>Smart Slider with ID #' . $this->slider->sliderId . ' does NOT EXIST or has NO SLIDES!</h3><h4>Usage: ' . $this->usage . '</h4>';
+            return '<!--Smart Slider #' . $this->slider->sliderId . ' does NOT EXIST or has NO SLIDES!' . $this->usage . '-->';
         }
         N2AssetsManager::loadFromArray($cachedSlider['assets']);
 

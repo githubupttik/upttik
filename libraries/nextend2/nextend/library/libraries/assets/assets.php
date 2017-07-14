@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-abstract class N2AssetsAbstract
-{
+abstract class N2AssetsAbstract {
 
     /*
         public $debug = false;
@@ -31,6 +23,7 @@ abstract class N2AssetsAbstract
     protected $globalInline = array();
     protected $firstCodes = array();
     protected $inline = array();
+    protected $staticGroup = array();
 
     protected $groups = array();
 
@@ -44,6 +37,10 @@ abstract class N2AssetsAbstract
         foreach ($files AS $file) {
             $this->files[$group][] = $path . NDS . $file;
         }
+    }
+
+    public function addStaticGroup($file, $group) {
+        $this->staticGroup[$group] = $file;
     }
 
     private function addGroup($group) {
@@ -71,11 +68,19 @@ abstract class N2AssetsAbstract
         }
     }
 
-    public function addInline($code, $global = false) {
-        if ($global) {
-            $this->globalInline[] = $code;
+    public function addInline($code, $global = false, $unshift = false) {
+        if ($unshift) {
+            if ($global) {
+                array_unshift($this->globalInline, $code);
+            } else {
+                array_unshift($this->inline, $code);
+            }
         } else {
-            $this->inline[] = $code;
+            if ($global) {
+                $this->globalInline[] = $code;
+            } else {
+                $this->inline[] = $code;
+            }
         }
     }
 
@@ -116,10 +121,12 @@ abstract class N2AssetsAbstract
 
         if (N2AssetsManager::$cacheAll) {
             foreach ($this->groups AS $group) {
+                if (isset($this->staticGroup[$group])) continue;
                 $files[$group] = $this->cache->getAssetFile($group, $this->files[$group], $this->codes[$group]);
             }
         } else {
             foreach ($this->groups AS $group) {
+                if (isset($this->staticGroup[$group])) continue;
                 if (in_array($group, N2AssetsManager::$cachedGroups)) {
                     $files[$group] = $this->cache->getAssetFile($group, $this->files[$group], $this->codes[$group]);
                 } else {
@@ -132,7 +139,10 @@ abstract class N2AssetsAbstract
                 }
             }
         }
-        return $files;
+        if (isset($files['n2'])) {
+            return array('n2' => $files['n2']) + $this->staticGroup + $files;
+        }
+        return array_merge($files, $this->staticGroup);
     }
 
     protected function getFilesRaw() {
@@ -147,6 +157,7 @@ abstract class N2AssetsAbstract
 
     public function serialize() {
         return array(
+            'staticGroup'  => $this->staticGroup,
             'files'        => $this->files,
             'urls'         => $this->urls,
             'codes'        => $this->codes,
@@ -157,6 +168,8 @@ abstract class N2AssetsAbstract
     }
 
     public function unSerialize($array) {
+        $this->staticGroup = array_merge($this->staticGroup, $array['staticGroup']);
+
         foreach ($array['files'] AS $group => $files) {
             if (!isset($this->files[$group])) {
                 $this->files[$group] = $files;

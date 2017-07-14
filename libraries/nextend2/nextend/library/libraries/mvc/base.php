@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2Base
-{
+class N2Base {
 
     public static $isReady = false;
 
@@ -68,7 +60,7 @@ class N2Base
             self::$applications[$name] = self::$applicationInfos[$name]->getInstance();
 
         } else {
-            N2SystemHelper::getDebugTrace("Application not available: '{$name}'");
+            throw new Exception("Application not available: {$name}");
         }
     }
 
@@ -113,8 +105,7 @@ class N2Base
 
 }
 
-abstract class N2ApplicationInfo
-{
+abstract class N2ApplicationInfo {
 
     private $acl = '';
     private $url = '';

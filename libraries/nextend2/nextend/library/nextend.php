@@ -1,42 +1,46 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2
-{
+class N2 {
 
-    public static $version = '2.0.18';
-    public static $api = 'http://secure.nextendweb.com/api/api.php';
+    public static $version = '2.0.21';
+    public static $api = 'https://secure.nextendweb.com/api/api.php';
 
-    public static function api($posts) {
+    public static function api($posts, $returnUrl = false) {
+
+        if ($returnUrl) {
+            $posts_default = array(
+                'platform' => N2Platform::getPlatform()
+            );
+
+            return self::$api . '?' . http_build_query($posts + $posts_default);
+        }
         if (class_exists('JHttp')) {
             $posts_default = array(
                 'platform' => N2Platform::getPlatform()
             );
 
-            $client   = new JHttp();
-            $response = $client->post(self::$api, $posts + $posts_default, array('Content-Type' => 'multipart/form-data'));
-            if ($response->code != '200') {
-                N2Message::error(n2_('Unable to contact with the licensing server, please try again later!'));
+            $client = new JHttp();
+            try {
+                $response = $client->post(self::$api, http_build_query($posts + $posts_default, '', '&'), array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8'), 5);
+            } catch (Exception $e) {
+            }
+            if ($response && $response->code != '200') {
+
+                if (isset($response->headers['Content-Type'])) {
+                    $contentType = $response->headers['Content-Type'];
+                }
+                $data = $response->body;
+            } else {
+                /*N2Message::error(n2_('Unable to contact with the licensing server. Possible reasons might be the CURL not enabled in php.ini, call to remote url(secure.nextenedweb.com) is disabled on your server. Contact your server host, and ask them to check these two things!'));
                 return array(
                     'status' => 'ERROR_HANDLED'
-                );
+                );*/
             }
-
-            if (isset($response->headers['Content-Type'])) {
-                $contentType = $response->headers['Content-Type'];
-            }
-            $data = $response->body;
         }
     
 
         if (!isset($data)) {
-            if (function_exists('curl_init')) {
+            if (function_exists('curl_init') && function_exists('curl_exec') && N2Settings::get('curl', 1)) {
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, self::$api);
 
@@ -45,7 +49,17 @@ class N2
                 );
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $posts + $posts_default);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                $data            = curl_exec($ch);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+
+                if (N2Settings::get('curl-clean-proxy', 0)) {
+                    curl_setopt($ch, CURLOPT_PROXY, '');
+                }
+                $data = curl_exec($ch);
+                if (curl_errno($ch) == 60) {
+                    curl_setopt($ch, CURLOPT_CAINFO, N2LIBRARY . '/cacert.pem');
+                    $data = curl_exec($ch);
+                }
                 $contentType     = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
                 $error           = curl_error($ch);
                 $curlErrorNumber = curl_errno($ch);
@@ -53,6 +67,7 @@ class N2
 
                 if ($curlErrorNumber) {
                     N2Message::error($curlErrorNumber . $error);
+
                     return array(
                         'status' => 'ERROR_HANDLED'
                     );
@@ -73,6 +88,7 @@ class N2
                 $data    = file_get_contents(self::$api, false, $context);
                 if ($data === false) {
                     N2Message::error(n2_('CURL disabled in your php.ini configuration. Please enable it!'));
+
                     return array(
                         'status' => 'ERROR_HANDLED'
                     );
@@ -80,6 +96,7 @@ class N2
                 $headers = self::parseHeaders($http_response_header);
                 if ($headers['status'] != '200') {
                     N2Message::error(n2_('Unable to contact with the licensing server, please try again later!'));
+
                     return array(
                         'status' => 'ERROR_HANDLED'
                     );
@@ -94,6 +111,7 @@ class N2
             case 'application/json':
                 return json_decode($data, true);
         }
+
         return $data;
     }
 
@@ -113,8 +131,10 @@ class N2
             if (isset($output[strtolower($header)])) {
                 return $output[strtolower($header)];
             }
+
             return;
         }
+
         return $output;
     }
 }

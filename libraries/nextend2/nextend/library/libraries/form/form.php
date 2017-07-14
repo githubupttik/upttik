@@ -1,15 +1,7 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 N2Loader::import('libraries.xml.helper');
 
-class N2FormAbstract extends N2Data
-{
+class N2FormAbstract extends N2Data {
 
     public static $documentation = '';
 
@@ -73,14 +65,11 @@ class N2FormAbstract extends N2Data
     }
 
     function decorateFormStart() {
-        echo NHtml::openTag("div", array("class" => "n2-form"));
+        echo N2Html::openTag("div", array("class" => "n2-form"));
     }
 
     function decorateFormEnd() {
-        echo NHtml::closeTag("div");
-        N2GoogleFonts::addFont('Open Sans');
-        N2GoogleFonts::addFont('Open Sans', 600);
-        N2GoogleFonts::addFont('Open Sans', 700);
+        echo N2Html::closeTag("div");
     }
 
     function loadXMLFile($file) {
@@ -88,6 +77,11 @@ class N2FormAbstract extends N2Data
             echo "xml file not found ('{$file}')! <br /><strong>" . __FILE__ . ":" . __LINE__ . "</strong>";
             n2_exit(true);
             //throw new Exception("xml file not found ('{$file}')! <br /><strong>" . __FILE__ . ":" . __LINE__."</strong>");
+        }
+
+        if (!function_exists('simplexml_load_string')) {
+            n2_e("SimpleXML extension must be enabled in PHP!");
+            n2_exit(true);
         }
 
         // @fix Warning: simplexml_load_file(): I/O warning : failed to load external entity
@@ -131,7 +125,7 @@ class N2FormAbstract extends N2Data
 
     public static function importTab($type) {
         $class = 'N2Tab' . $type;
-        if (!class_exists($class)) {
+        if (!class_exists($class, false)) {
             for ($i = count(N2Form::$importPaths) - 1; $i >= 0; $i--) {
                 if (N2Loader::importPath(N2Form::$importPaths[$i] . '/tabs/' . $type)) {
                     break;

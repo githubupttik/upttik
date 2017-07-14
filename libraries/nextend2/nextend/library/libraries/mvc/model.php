@@ -1,15 +1,7 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 N2Loader::import("libraries.mvc.db");
 
-class N2Model
-{
+class N2Model {
 
     /**
      * @var N2DBConnectorAbstract
@@ -23,6 +15,10 @@ class N2Model
         }
         $this->db = new N2DBConnector($tableName);
 
+    }
+
+    public function getTable() {
+        return $this->db->tableName;
     }
 
 }

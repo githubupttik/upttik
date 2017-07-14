@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2LinkParser
-{
+class N2LinkParser {
 
     public static function parse($url, &$attributes, $isEditor = false) {
         if ($url == '#' || $isEditor) {
@@ -28,13 +20,15 @@ class N2LinkParser
                     $isEditor
                 ));
             }
+        } else {
+            $url = N2ImageHelper::fixed($url);
         }
+
         return $url;
     }
 }
 
-class N2LinkScrollTo
-{
+class N2LinkScrollTo {
 
     private static function init() {
         static $inited = false;
@@ -83,7 +77,11 @@ class N2LinkScrollTo
                     }
                 },
                 element: function(selector){
-                    n2Scroll.to(n2(selector).offset().top);
+                    var offsetTop = 0;
+                    if(typeof n2ScrollOffsetSelector !== "undefined"){
+                        offsetTop = n2(n2ScrollOffsetSelector).outerHeight();
+                    }
+                    n2Scroll.to(n2(selector).offset().top - offsetTop);
                 }
             };');
             $inited = true;
@@ -114,8 +112,9 @@ class N2LinkScrollTo
                     $onclick = 'n2Scroll.element("' . $argument . '");';
                     break;
             }
-            $attributes['onclick'] = NHtml::encode($onclick . "return false;");
+            $attributes['onclick'] = $onclick . "return false;";
         }
+
         return '#';
     }
 }

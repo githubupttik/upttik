@@ -1,17 +1,9 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 N2Loader::import('libraries.parse.font');
 N2Loader::import('libraries.parse.style');
 
-abstract class N2SmartSliderCSSAbstract
-{
+abstract class N2SmartSliderCSSAbstract {
 
     /**
      * @var N2SmartSliderAbstract
@@ -37,18 +29,26 @@ abstract class N2SmartSliderCSSAbstract
             N2Message::error(n2_('Slider height is not valid number!'));
         }
         $context = array(
-            'id'     => "~'#{$slider->elementId}'",
-            'width'  => $width . 'px',
-            'height' => $height . 'px',
-            'canvas' => 0,
-            'count'  => count($slider->slides),
-            'margin' => '0px 0px 0px 0px'
+            'id'             => "~'#{$slider->elementId}'",
+            'width'          => $width . 'px',
+            'height'         => $height . 'px',
+            'canvas'         => 0,
+            'count'          => count($slider->slides),
+            'margin'         => '0px 0px 0px 0px',
+            'clear'          => 'clear.n2less',
+            'hasPerspective' => 0
         );
+
+        $perspective = intval($params->get('perspective', 1500));
+        if ($perspective > 0) {
+            $context['hasPerspective'] = 1;
+            $context['perspective']    = $perspective . 'px';
+        }
 
         $this->renderType($context);
 
         if ($params->get('imageload', 0)) {
-            N2LESS::addFile(NEXTEND_SMARTSLIDER_ASSETS . '/less/spinner.less', $slider->cacheId, $context, NEXTEND_SMARTSLIDER_ASSETS . '/less' . NDS);
+            N2LESS::addFile(NEXTEND_SMARTSLIDER_ASSETS . '/less/spinner.n2less', $slider->cacheId, $context, NEXTEND_SMARTSLIDER_ASSETS . '/less' . NDS);
         }
 
         $this->sizes['marginVertical']   = 0;
@@ -60,7 +60,7 @@ abstract class N2SmartSliderCSSAbstract
         $this->sizes['canvasHeight'] = intval($context['canvasheight']);
     }
 
-    protected abstract function  renderType(&$context);
+    protected abstract function renderType(&$context);
 
     protected function setContextFonts($matches, &$context, $fonts, $value) {
         $context['font' . $fonts] = '~".' . $matches[0] . '"';

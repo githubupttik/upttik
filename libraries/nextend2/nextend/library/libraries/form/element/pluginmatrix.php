@@ -1,18 +1,10 @@
 <?php
 /**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
-/**
  * @todo: Refactor with fragments
  */
 N2Loader::import('libraries.form.element.hidden');
 
-class N2ElementPluginMatrix extends N2ElementHidden
-{
+class N2ElementPluginMatrix extends N2ElementHidden {
 
     var $_list = null;
 
@@ -21,7 +13,7 @@ class N2ElementPluginMatrix extends N2ElementHidden
 
         $id = 'n2-form-matrix-' . $this->_id;
 
-        $html = NHtml::openTag("div", array(
+        $html = N2Html::openTag("div", array(
             'id'    => $id,
             "class" => "n2-form-matrix"
         ));
@@ -39,28 +31,28 @@ class N2ElementPluginMatrix extends N2ElementHidden
 
         if (!$test) $value = 'arrow';
 
-        $html .= NHtml::openTag('div', array('class' => 'n2-h2 n2-content-box-title-bg n2-form-matrix-views'));
+        $html .= N2Html::openTag('div', array('class' => 'n2-h2 n2-content-box-title-bg n2-form-matrix-views'));
 
         $class = 'n2-underline n2-h4 n2-uc n2-has-underline n2-form-matrix-menu';
         foreach ($widgetTypes AS $type => $v) {
 
-            $html .= NHtml::tag("div", array(
+            $html .= N2Html::tag("div", array(
                 "onclick" => "n2('#{$this->_id}').val('{$type}');",
-                "class"   => $class . ($value == $type ? ' n2-active' : '')
-            ), NHtml::tag("span", array("class" => "n2-underline"), $v[0]));
+                "class"   => $class . ($value == $type ? ' n2-active' : '') . ' n2-fm-' . $type
+            ), N2Html::tag("span", array("class" => "n2-underline"), $v[0]));
 
         }
-        $html .= NHtml::closeTag("div");
+        $html .= N2Html::closeTag("div");
 
 
-        $html .= NHtml::openTag("div", array(
+        $html .= N2Html::openTag("div", array(
             "class" => "n2-tabs"
         ));
 
         foreach ($widgetTypes AS $type => $v) {
 
 
-            $html .= NHtml::openTag('div', array(
+            $html .= N2Html::openTag('div', array(
                 'class' => 'n2-form-matrix-pane' . ($value == $type ? ' n2-active' : '')
             ));
 
@@ -77,12 +69,12 @@ class N2ElementPluginMatrix extends N2ElementHidden
 
             $html .= $GLOBALS['nextendbuffer'];
 
-            $html .= NHtml::closeTag("div");
+            $html .= N2Html::closeTag("div");
         }
 
-        $html .= NHtml::closeTag("div");
+        $html .= N2Html::closeTag("div");
 
-        $html .= NHtml::closeTag("div");
+        $html .= N2Html::closeTag("div");
         N2JS::addInline('
             (function(){
                 var matrix = $("#' . $id . '"),
@@ -95,7 +87,9 @@ class N2ElementPluginMatrix extends N2ElementHidden
                     views.eq(i).addClass("n2-active");
                     panes.eq(i).addClass("n2-active");
                 });
-            })()
+
+                views.find(":visible").first().trigger("click");
+            })();
         ');
 
         return $html . parent::fetchElement();

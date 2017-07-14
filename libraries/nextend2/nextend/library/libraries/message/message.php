@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2Message
-{
+class N2Message {
 
     /**
      * @var bool|array
@@ -27,19 +19,31 @@ class N2Message
 
     private static function loadSessionError() {
         if (self::$error === false) {
-            self::$error = N2Session::get('error', array());
+            if (N2Platform::$isAdmin) {
+                self::$error = N2Session::get('error', array());
+            } else {
+                self::$error = array();
+            }
         }
     }
 
     private static function loadSessionSuccess() {
         if (self::$success === false) {
-            self::$success = N2Session::get('success', array());
+            if (N2Platform::$isAdmin) {
+                self::$success = N2Session::get('success', array());
+            } else {
+                self::$error = array();
+            }
         }
     }
 
     private static function loadSessionNotice() {
         if (self::$notice === false) {
-            self::$notice = N2Session::get('notice', array());
+            if (N2Platform::$isAdmin) {
+                self::$notice = N2Session::get('notice', array());
+            } else {
+                self::$error = array();
+            }
         }
     }
 

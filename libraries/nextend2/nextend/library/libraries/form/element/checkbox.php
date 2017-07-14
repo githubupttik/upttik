@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 N2Loader::import('libraries.form.element.hidden');
 
 class N2ElementCheckbox extends N2ElementHidden
@@ -21,12 +14,12 @@ class N2ElementCheckbox extends N2ElementHidden
 
         $this->value = $this->getValue();
 
-        $html = NHtml::tag('div', array(
+        $html = N2Html::tag('div', array(
             'class' => 'n2-form-element-checkbox',
             'style' => N2XmlHelper::getAttribute($this->_xml, 'style')
         ), $this->generateOptions($this->_xml) . parent::fetchElement());
 
-        N2JS::addInline('new NextendElementCheckbox("' . $this->_id . '", ' . json_encode($this->values) . ');');
+        N2JS::addInline('new N2Classes.FormElementCheckbox("' . $this->_id . '", ' . json_encode($this->values) . ');');
 
         return $html;
     }
@@ -45,7 +38,7 @@ class N2ElementCheckbox extends N2ElementHidden
             if ($this->isSelected($v)) {
                 $attributes['selected'] = 'selected';
             }
-            $html .= NHtml::tag('div', $attributes, (string)$option);
+            $html .= N2Html::tag('div', $attributes, (string)$option);
         }
         return $html;
     }

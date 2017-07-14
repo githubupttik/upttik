@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 /**
  * The less compiler and parser.
@@ -75,7 +68,7 @@ class n2lessc
     protected function findImport($url) {
         foreach ((array)$this->importDir as $dir) {
             $full = $dir . (substr($dir, -1) != '/' ? '/' : '') . $url;
-            if ($this->fileExists($file = $full . '.less') || $this->fileExists($file = $full)) {
+            if ($this->fileExists($file = $full . '.n2less') || $this->fileExists($file = $full)) {
                 return $file;
             }
         }
@@ -109,8 +102,12 @@ class n2lessc
 
         $url = $this->compileValue($this->lib_e($str));
 
+        if(isset($this->registeredVars[$url])){
+            $url = $this->registeredVars[$url];
+        }
+
         // don't import if it ends in css
-        if (substr_compare($url, '.css', -4, 4) === 0) return false;
+        if (strlen($url) >=4 && substr_compare($url, '.css', -4, 4) === 0) return false;
 
         $realPath = $this->findImport($url);
         if ($realPath === null) return false;
@@ -2671,7 +2668,7 @@ class n2lessc_parser
         if ($this->unit($value)) return true;
         if ($this->color($value)) return true;
         if ($this->func($value)) return true;
-        if ($this->string($value)) return true;
+        if ($this->_string($value)) return true;
 
         if ($this->keyword($word)) {
             $value = array(
@@ -2691,7 +2688,7 @@ class n2lessc_parser
         }
 
         // unquote string (should this work on any type?
-        if ($this->literal("~") && $this->string($str)) {
+        if ($this->literal("~") && $this->_string($str)) {
             $value = array(
                 "escape",
                 $str
@@ -2841,7 +2838,7 @@ class n2lessc_parser
                 }
             }
 
-            if (($tok == "'" || $tok == '"') && $this->string($str)) {
+            if (($tok == "'" || $tok == '"') && $this->_string($str)) {
                 $content[] = $str;
                 continue;
             }
@@ -2877,7 +2874,7 @@ class n2lessc_parser
         return true;
     }
 
-    protected function string(&$out) {
+    protected function _string(&$out) {
         $s = $this->seek();
         if ($this->literal('"', false)) {
             $delim = '"';

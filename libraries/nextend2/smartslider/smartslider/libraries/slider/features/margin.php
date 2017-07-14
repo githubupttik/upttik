@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2SmartSliderFeatureMargin
 {
@@ -23,7 +16,7 @@ class N2SmartSliderFeatureMargin
         if (!N2Platform::$isAdmin && count($this->margin) >= 4) {
             array_splice($this->margin, 4);
             if ($this->margin[0] != 0 || $this->margin[1] != 0 || $this->margin[2] != 0 || $this->margin[3] != 0) {
-                $sliderHTML = NHtml::tag("div", array(
+                $sliderHTML = N2Html::tag("div", array(
                     "class"  => "n2-ss-margin",
                     "encode" => false,
                     "style"  => "margin: " . implode('px ', $this->margin) . "px;"

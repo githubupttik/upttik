@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-abstract class N2GeneratorAbstract
-{
+abstract class N2GeneratorAbstract {
 
     /** @var  N2GeneratorInfo */
     protected $info;
@@ -62,5 +54,13 @@ abstract class N2GeneratorAbstract
             "\n\r",
             "\r"
         ), "\n", $this->data->get('ids'))));
+    }
+
+    public function filterName($name) {
+        return $name;
+    }
+
+    public function hash($key) {
+        return md5($key);
     }
 }

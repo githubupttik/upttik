@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 jimport('joomla.plugin.plugin');
 
 class plgSystemNextend2 extends JPlugin
@@ -50,7 +43,11 @@ class plgSystemNextend2 extends JPlugin
                 $body = JResponse::getBody();
                 $mode = 'JResponse';
             }
-            $body = preg_replace('/<\/head>/', $head . '</head>', $body, 1);
+            
+            $parts = preg_split('/<\/head>/', $body, 2);
+
+            $body = implode($head . '</head>', $parts);
+            
             switch ($mode) {
                 case 'JResponse':
                     JResponse::setBody($body);

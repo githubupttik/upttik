@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2ImageHelper extends N2ImageHelperAbstract
 {
@@ -36,7 +29,7 @@ class N2ImageHelper extends N2ImageHelperAbstract
                         980,
                         680
                     ],
-                    title: "' . n2_('Images') . '",
+                    title: "' . n2_('Media Library') . '",
                     controls: [\'<a href="#" class="n2-a n2-uc n2-h5">Use legacy image selector</a>\'],
                     content: \'\',
                     fn: {
@@ -88,9 +81,9 @@ class N2ImageHelper extends N2ImageHelperAbstract
                         980,
                         680
                     ],
-                    title: "' . n2_('Images') . '",
+                    title: "' . n2_('Media Library') . '",
                     controlsClass: "n2-modal-controls-side",
-                    controls: [\'<a href="#" class="n2-a n2-uc n2-h5">Use legacy image selector</a>\', \'<a href="#" class="n2-button n2-button-big n2-button-green n2-uc n2-h4">' . n2_('Select') . '</a>\'],
+                    controls: [\'<a href="#" class="n2-a n2-uc n2-h5">Use legacy image selector</a>\', \'<a href="#" class="n2-button n2-button-normal n2-button-l n2-button-green n2-h4 n2-uc">' . n2_('Select') . '</a>\'],
                     content: \'\',
                     fn: {
                         show: function () {

@@ -1,16 +1,8 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 N2Loader::import('libraries.plugins.N2SliderWidgetAbstract', 'smartslider');
 
-class N2SSPluginWidgetShadowShadow extends N2SSPluginWidgetAbstract
-{
+class N2SSPluginWidgetShadowShadow extends N2SSPluginWidgetAbstract {
 
     var $_name = 'shadow';
 
@@ -41,6 +33,7 @@ class N2SSPluginWidgetShadowShadow extends N2SSPluginWidgetAbstract
             self::$key . 'position-',
             'shadow'
         );
+
         return $positions;
     }
 
@@ -57,7 +50,12 @@ class N2SSPluginWidgetShadowShadow extends N2SSPluginWidgetAbstract
             return '';
         }
 
-        N2JS::addFile(N2Filesystem::translate(dirname(__FILE__) . '/shadow/shadow.js'), $id);
+        N2LESS::addFile(N2Filesystem::translate(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'shadow' . DIRECTORY_SEPARATOR . 'style.n2less'), $slider->cacheId, array(
+            "sliderid" => $slider->elementId
+        ), NEXTEND_SMARTSLIDER_ASSETS . '/less' . NDS);
+        N2JS::addFile(N2Filesystem::translate(dirname(__FILE__) . '/shadow/shadow.min.js'), $id);
+    
+
 
         list($displayClass, $displayAttributes) = self::getDisplayAttributes($params, self::$key);
 
@@ -75,13 +73,16 @@ class N2SSPluginWidgetShadowShadow extends N2SSPluginWidgetAbstract
             'area'    => intval($params->get(self::$key . 'position-area'))
         );
 
-        N2JS::addInline('new NextendSmartSliderWidgetShadow("' . $id . '", ' . json_encode($parameters) . ');');
+        N2JS::addInline('new N2Classes.SmartSliderWidgetShadow("' . $id . '", ' . json_encode($parameters) . ');');
 
 
-        return NHtml::tag('div', $displayAttributes + $attributes + array(
-                'class' => $displayClass . "nextend-shadow",
+        return N2Html::tag('div', $displayAttributes + $attributes + array(
+                'class' => $displayClass . "nextend-shadow n2-ow",
                 'style' => $style
-            ), NHtml::image(N2ImageHelper::fixed($shadow), '', array('style' => 'display: block; width:100%;max-width:none;','class'=>'nextend-shadow-image')));
+            ), N2Html::image(N2ImageHelper::fixed($shadow), 'Shadow', array(
+            'style' => 'display: block; width:100%;max-width:none;',
+            'class' => 'n2-ow nextend-shadow-image'
+        )));
     }
 
     public static function prepareExport($export, $params) {

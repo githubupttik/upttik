@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 N2Loader::import('libraries.form.element.hidden');
 
 class N2ElementList extends N2ElementHidden
@@ -29,7 +22,7 @@ class N2ElementList extends N2ElementHidden
         $size = N2XmlHelper::getAttribute($this->_xml, 'size');
         if ($size != '') $size = " size='" . $size . "'";
 
-        $html = NHtml::openTag("div", array(
+        $html = N2Html::openTag("div", array(
             "class" => "n2-form-element-list",
             "style" => N2XmlHelper::getAttribute($this->_xml, 'style')
         ));
@@ -39,11 +32,11 @@ class N2ElementList extends N2ElementHidden
             $html .= $this->generateOptgroup($this->_xml);
         }
         $html .= "</select>";
-        $html .= NHtml::closeTag("div");
+        $html .= N2Html::closeTag("div");
 
         $html .= parent::fetchElement();
 
-        N2JS::addInline('new NextendElementList("' . $this->_id . '", ' . $this->_multiple . ', "' . $this->getValue() . '");');
+        N2JS::addInline('new N2Classes.FormElementList("' . $this->_id . '", ' . $this->_multiple . ', "' . $this->getValue() . '");');
 
         return $html;
     }

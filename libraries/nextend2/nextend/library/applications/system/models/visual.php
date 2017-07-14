@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2SystemVisualModel extends N2Model
 {
@@ -52,7 +45,7 @@ class N2SystemVisualModel extends N2Model
 
     public function createSet($name) {
 
-        $setId = $this->storage->add($this->type . 'set', null, $name);
+        $setId = $this->storage->add($this->type . 'set', '', $name);
 
         $set = $this->storage->getById($setId, $this->type . 'set');
         if (!empty($set) && $set['section'] == $this->type . 'set') {

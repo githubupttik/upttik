@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 /**
  * @property mixed moduleParams
@@ -137,7 +130,7 @@ class N2ControllerAbstract
 
 N2Loader::import("libraries.mvc.controller", 'platform');
 
-if (!class_exists('N2Controller')) {
+if (!class_exists('N2Controller', false)) {
     class N2Controller extends N2ControllerAbstract
     {
 

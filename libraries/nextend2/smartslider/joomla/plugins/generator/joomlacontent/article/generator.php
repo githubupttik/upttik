@@ -1,17 +1,23 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
-N2Loader::import('libraries.slider.generator.N2SmartSliderGeneratorAbstract', 'smartslider');
+N2Loader::import('libraries.slider.generator.abstract', 'smartslider');
 require_once(JPATH_SITE . '/components/com_content/helpers/route.php');
 require_once(dirname(__FILE__) . '/../../imagefallback.php');
 
-class N2GeneratorJoomlaContentArticle extends N2GeneratorAbstract
-{
+class N2GeneratorJoomlaContentArticle extends N2GeneratorAbstract {
+
+    public function datify($date, $format) {
+        $result = date($format, strtotime($date));
+        return $result;
+    }
+
+    private function translate($from, $translate) {
+        if (!empty($translate) && !empty($from)) {
+            foreach ($translate AS $key => $value) {
+                $from = str_replace($key, $value, $from);
+            }
+        }
+        return $from;
+    }
 
     protected function _getData($count, $startIndex) {
         N2Loader::import('nextend.database.database');
@@ -26,12 +32,15 @@ class N2GeneratorJoomlaContentArticle extends N2GeneratorAbstract
         $query .= 'con.alias, ';
         $query .= 'con.introtext, ';
         $query .= 'con.fulltext, ';
+        $query .= 'con.created, ';
         $query .= 'con.catid, ';
         $query .= 'cat.title AS cat_title, ';
         $query .= 'cat.alias AS cat_alias, ';
         $query .= 'con.created_by, con.state, ';
         $query .= 'usr.name AS created_by_alias, ';
-        $query .= 'con.images ';
+        $query .= 'con.images, ';
+        $query .= 'con.urls, ';
+        $query .= 'con.attribs ';
 
         $query .= 'FROM #__content AS con ';
 
@@ -67,9 +76,24 @@ class N2GeneratorJoomlaContentArticle extends N2GeneratorAbstract
                 $where[] = 'con.featured = 0 ';
                 break;
         }
-        $language = $this->data->get('sourcelanguage', '*');
-        if ($language) {
-            $where[] = 'con.language = ' . $db->quote($language) . ' ';
+        $language = explode(",", $this->data->get('sourcelanguage', '*'));
+        if (!empty($language[0]) && $language[0] != '*') {
+            $where[] = 'con.language IN (' . implode(",", $db->quote($language)) . ') ';
+        }
+
+        $articleIds = $this->data->get('sourcearticleids', '');
+        if (!empty($articleIds)) {
+            $where[] = 'con.id IN (' . $articleIds . ') ';
+        }
+
+        $articleIdsExcluded = $this->data->get('sourcearticleidsexcluded', '');
+        if (!empty($articleIdsExcluded)) {
+            $where[] = 'con.id NOT IN (' . $articleIdsExcluded . ') ';
+        }
+
+        $accessLevels = explode('||', $this->data->get('sourceaccesslevels', '*'));
+        if (!in_array(0, $accessLevels)) {
+            $where[] = 'con.access IN (' . implode(",", $accessLevels) . ')';
         }
 
         if (count($where) > 0) {
@@ -86,13 +110,27 @@ class N2GeneratorJoomlaContentArticle extends N2GeneratorAbstract
         $db->setQuery($query);
         $result = $db->loadAssocList();
 
+        $sourceTranslate = $this->data->get('sourcetranslatedate', '');
+        $translateValue  = explode('||', $sourceTranslate);
+        $translate       = array();
+        if ($sourceTranslate != 'January->January||February->February||March->March' && !empty($translateValue)) {
+            foreach ($translateValue AS $tv) {
+                $translateArray = explode('->', $tv);
+                if (!empty($translateArray) && count($translateArray) == 2) {
+                    $translate[$translateArray[0]] = $translateArray[1];
+                }
+            }
+        }
+
         $dispatcher = JDispatcher::getInstance();
         JPluginHelper::importPlugin('content');
         $uri = N2Uri::getBaseUri();
 
-        $data = array();
+        $data    = array();
+        $idArray = array();
         for ($i = 0; $i < count($result); $i++) {
-            $r = Array(
+            $idArray[$i] = $result[$i]['id'];
+            $r           = Array(
                 'title' => $result[$i]['title']
             );
 
@@ -143,10 +181,58 @@ class N2GeneratorJoomlaContentArticle extends N2GeneratorAbstract
                 'fulltext_image'    => !empty($images['image_fulltext']) ? N2ImageHelper::dynamic($uri . "/" . $images['image_fulltext']) : '',
                 'category_title'    => $result[$i]['cat_title'],
                 'created_by'        => $result[$i]['created_by_alias'],
-                'id'                => $result[$i]['id']
+                'id'                => $result[$i]['id'],
+                'created_date'      => $this->translate($this->datify($result[$i]['created'], $this->data->get('sourcedateformat', 'Y-m-d')), $translate),
+                'created_time'      => $this->translate($this->datify($result[$i]['created'], $this->data->get('sourcetimeformat', 'G:i')), $translate)
             );
 
+            $urls = (array)json_decode($result[$i]['urls'], true);
+
+            $r += array(
+                'urla'     => $urls['urla'],
+                'urlb'     => $urls['urlb'],
+                'urlc'     => $urls['urlc'],
+                'urlatext' => $urls['urlatext'],
+                'urlbtext' => $urls['urlbtext'],
+                'urlctext' => $urls['urlctext']
+            );
+
+            $attribs = (array)json_decode($result[$i]['attribs'], true);
+            $r['spfeatured_image'] = '';
+            if(array_key_exists("spfeatured_image", $attribs) && !empty($attribs['spfeatured_image'])){
+                $r['spfeatured_image'] = N2ImageHelper::dynamic($uri . "/" . $attribs['spfeatured_image']);
+            }
+            if(array_key_exists("gallery", $attribs) && !empty($attribs['gallery'])){
+                $gallery = (array)json_decode($attribs['gallery'],true);
+                for ($g=0; $g < count($gallery["gallery_images"]); $g++) { 
+                    $r['spgallery_'.$g] = N2ImageHelper::dynamic($uri . "/" . $gallery["gallery_images"][$g]);
+                }
+            }
+
             $data[] = $r;
+        }
+
+        if ($this->data->get('sourcefields', 0)) {
+            $query = "SELECT fv.value, fv.item_id, f.title, f.type FROM #__fields_values AS fv LEFT JOIN #__fields AS f ON fv.field_id = f.id WHERE fv.item_id IN (" . implode(',', $idArray) . ")";
+            $db->setQuery($query);
+            $result    = $db->loadAssocList();
+            $AllResult = array();
+            foreach ($result AS $r) {
+                if ($r['type'] == 'media') {
+                    $r['value'] = N2ImageHelper::dynamic($uri . "/" . $r["value"]);
+                }
+                $r['title'] = htmlentities($r['title']);
+                $AllResult[$r['item_id']][$r['title']] = $r['value'];
+            }
+
+            for ($i = 0; $i < count($data); $i++) {
+                if (isset($AllResult[$data[$i]['id']])) {
+                    foreach ($AllResult[$data[$i]['id']] as $key => $value) {
+                        $key            = preg_replace('/[^a-zA-Z0-9_\x7f-\xff]*/', '', $key);
+                        $data[$i][$key] = $value;
+                    }
+                }
+            }
         }
         return $data;
     }

@@ -1,15 +1,7 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 N2Loader::import('libraries.form.element.hidden');
 
-class N2ElementMixed extends N2Element
-{
+class N2ElementMixed extends N2Element {
 
     var $_separator = '|*|';
 
@@ -27,7 +19,16 @@ class N2ElementMixed extends N2Element
         $this->_elements = array();
         $i               = 0;
         foreach ($this->_xml->param AS $element) {
-            $html .= "<div class='n2-mixed-group " . N2XmlHelper::getAttribute($element, 'class') . "' style='" . N2XmlHelper::getAttribute($element, 'mixedstyle') . "'>";
+            $attrs = array();
+            if (isset($element->attribute)) {
+                foreach ($element->attribute AS $attr) {
+                    $attrs[N2XmlHelper::getAttribute($attr, 'type')] = (string)$attr;
+                }
+            }
+            $html .= N2Html::openTag('div', $attrs + array(
+                    'class' => "n2-mixed-group " . N2XmlHelper::getAttribute($element, 'class'),
+                    'style' => N2XmlHelper::getAttribute($element, 'mixedstyle')
+                ));
 
             $class = N2Form::importElement(N2XmlHelper::getAttribute($element, 'type'));
 
@@ -53,7 +54,7 @@ class N2ElementMixed extends N2Element
         $html .= $hiddenhtml[1];
         $html .= "</div>";
 
-        N2JS::addInline('new NextendElementMixed("' . $this->_id . '", ' . json_encode($this->_elements) . ', "' . $this->_separator . '");');
+        N2JS::addInline('new N2Classes.FormElementMixed("' . $this->_id . '", ' . json_encode($this->_elements) . ', "' . $this->_separator . '");');
 
         return $html;
     }

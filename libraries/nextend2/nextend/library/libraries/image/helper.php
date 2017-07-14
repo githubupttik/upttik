@@ -1,15 +1,7 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 
-class N2ImageHelperAbstract
-{
+class N2ImageHelperAbstract {
 
     public static $imagePaths = array();
     public static $imageUrls = array();
@@ -37,6 +29,7 @@ class N2ImageHelperAbstract
                 break;
             }
         }
+
         return $image;
     }
 
@@ -47,6 +40,7 @@ class N2ImageHelperAbstract
                 break;
             }
         }
+
         return $image;
     }
 
@@ -63,6 +57,7 @@ class N2ImageHelperAbstract
         if (self::$protocolRelative) {
             return preg_replace('/^http(s)?:\/\//', '//', $url);
         }
+
         return $url;
     }
 
@@ -71,6 +66,7 @@ class N2ImageHelperAbstract
         for ($i = 0; $i < count(self::$siteKeywords); $i++) {
             $def[self::$siteKeywords[$i]] = self::$imageUrls[$i];
         }
+
         return $def;
     }
 
@@ -85,7 +81,7 @@ class N2ImageHelperAbstract
                     ],
                     title: "' . n2_('Images') . '",
                     controlsClass: "n2-modal-controls-side",
-                    controls: [\'<a href="#" class="n2-button n2-button-big n2-button-green n2-uc n2-h4">' . n2_('Select') . '</a>\'],
+                    controls: [\'<a href="#" class="n2-button n2-button-normal n2-button-l n2-radius-s n2-button-green n2-uc n2-h4">' . n2_('Select') . '</a>\'],
                     content: \'\',
                     fn: {
                         show: function () {
@@ -108,7 +104,15 @@ class N2ImageHelperAbstract
         if (substr($image, 0, 1) == '$' && $ext == 'svg') {
             return 'data:image/svg+xml;base64,' . base64_encode(N2Filesystem::readFile(N2ImageHelper::fixed($image, true)));
         }
+
         return N2ImageHelper::fixed($image);
+    }
+
+    public static function readSVG($image) {
+        return N2Filesystem::readFile(N2ImageHelper::fixed($image, true));
+    }
+
+    public static function onImageUploaded($filename) {
     }
 }
 

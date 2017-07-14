@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 class N2SmartSliderFeatureControls
 {
@@ -36,7 +29,7 @@ class N2SmartSliderFeatureControls
     public function makeJavaScriptProperties(&$properties) {
         $properties['controls'] = array(
             'scroll'   => $this->scroll,
-            'drag'     => $this->drag,
+            'drag'     => count($this->slider->slides) > 1 ? $this->drag : 0,
             'touch'    => $this->touch,
             'keyboard' => $this->keyboard,
             'tilt'     => $this->tilt

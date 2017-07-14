@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 N2Loader::import('libraries.form.element.subform');
 
@@ -24,7 +17,7 @@ class N2ElementSubformImage extends N2ElementSubform
         }
 
         N2JS::addInline('
-        new NextendElementSubform(
+        new N2Classes.FormElementSubform(
                "' . $this->_id . '",
                "nextend-' . $this->_name . '-panel",
                "' . $this->_tab->_name . '",
@@ -32,7 +25,7 @@ class N2ElementSubformImage extends N2ElementSubform
             );
         ');
         N2JS::addInline('
-        new NextendElementSubformImage(
+        new N2Classes.FormElementSubformImage(
               "' . $this->_id . '",
               "' . $this->_id . '_options"
             );
@@ -45,19 +38,19 @@ class N2ElementSubformImage extends N2ElementSubform
             $this->_tab->_hide = true;
         }
 
-        return NHtml::tag('div', array(
+        return N2Html::tag('div', array(
             'class' => 'n2-subform-image ' . $this->getClass(),
             'id'    => $this->_id . '_options'
         ), $html);
     }
 
     function getOptionHtml($path, $k) {
-        return NHtml::tag('div', array(
+        return N2Html::tag('div', array(
             'class' => 'n2-subform-image-option ' . $this->isActive($k)
-        ), NHtml::tag('div', array(
+        ), N2Html::tag('div', array(
                 'class' => 'n2-subform-image-element',
                 'style' => 'background-image: url(' . $this->getImage($path, $k) . ');'
-            )) . NHtml::tag('div', array(
+            )) . N2Html::tag('div', array(
                 'class' => 'n2-subform-image-title n2-h4'
             ), $this->getLabel($k)));
     }

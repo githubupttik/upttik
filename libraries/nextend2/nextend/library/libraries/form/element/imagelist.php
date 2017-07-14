@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 N2Loader::import('libraries.form.element.radio');
 
 class N2ElementImageList extends N2ElementRadio
@@ -28,13 +21,13 @@ class N2ElementImageList extends N2ElementRadio
             }
         }
 
-        $html = NHtml::openTag("div", array(
+        $html = N2Html::openTag("div", array(
             'class' => 'n2-imagelist',
             'style' => N2XmlHelper::getAttribute($this->_xml, 'style')
         ));
 
         $html .= parent::fetchElement();
-        $html .= NHtml::closeTag('div');
+        $html .= N2Html::closeTag('div');
 
         return $html;
     }
@@ -51,18 +44,18 @@ class N2ElementImageList extends N2ElementRadio
             if ($v != -1) {
                 $value          = $this->parseValue($image);
                 $this->values[] = $value;
-                $html .= NHtml::openTag("div", array("class" => "n2-radio-option n2-imagelist-option" . ($selected ? ' n2-active' : '')));
+                $html .= N2Html::openTag("div", array("class" => "n2-radio-option n2-imagelist-option" . ($selected ? ' n2-active' : '')));
 
                 $ext = pathinfo($image, PATHINFO_EXTENSION);
                 if ($ext == 'svg') {
                     $image = 'data:image/svg+xml;base64,' . base64_encode(N2Filesystem::readFile(N2Filesystem::getBasePath() . $v));
                 }
 
-                $html .= NHtml::image($image, (string)$option, array('data-image' => $value));
-                $html .= NHtml::closeTag("div");
+                $html .= N2Html::image($image, (string)$option, array('data-image' => $value));
+                $html .= N2Html::closeTag("div");
             } else {
                 $this->values[] = -1;
-                $html .= NHtml::tag("div", array("class" => "n2-radio-option" . ($selected ? ' n2-active' : '')), ((string)$option));
+                $html .= N2Html::tag("div", array("class" => "n2-radio-option" . ($selected ? ' n2-active' : '')), ((string)$option));
             }
         }
 

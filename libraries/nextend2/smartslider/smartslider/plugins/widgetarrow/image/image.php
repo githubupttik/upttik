@@ -1,16 +1,8 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 N2Loader::import('libraries.plugins.N2SliderWidgetAbstract', 'smartslider');
 
-class N2SSPluginWidgetArrowImage extends N2SSPluginWidgetAbstract
-{
+class N2SSPluginWidgetArrowImage extends N2SSPluginWidgetAbstract {
 
     private static $key = 'widget-arrow-';
 
@@ -120,11 +112,11 @@ class N2SSPluginWidgetArrowImage extends N2SSPluginWidgetAbstract
         }
         if ($previous || $next) {
 
-            N2LESS::addFile(N2Filesystem::translate(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR . 'style.less'), $slider->cacheId, array(
+            N2LESS::addFile(N2Filesystem::translate(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR . 'style.n2less'), $slider->cacheId, array(
                 "sliderid" => $slider->elementId
             ), NEXTEND_SMARTSLIDER_ASSETS . '/less' . NDS);
-
-            N2JS::addFile(N2Filesystem::translate(dirname(__FILE__) . '/image/arrow.js'), $id);
+            N2JS::addFile(N2Filesystem::translate(dirname(__FILE__) . '/image/arrow.min.js'), $id);
+        
 
             list($displayClass, $displayAttributes) = self::getDisplayAttributes($params, self::$key);
 
@@ -144,7 +136,7 @@ class N2SSPluginWidgetArrowImage extends N2SSPluginWidgetAbstract
                 $html .= self::getHTML($id, $params, $animation, 'next', $next, $displayClass, $displayAttributes, $styleClass, $nextColor, $nextHover, $nextHoverColor);
             }
 
-            N2JS::addInline('new NextendSmartSliderWidgetArrowImage("' . $id . '", ' . floatval($params->get(self::$key . 'responsive-desktop')) . ', ' . floatval($params->get(self::$key . 'responsive-tablet')) . ', ' . floatval($params->get(self::$key . 'responsive-mobile')) . ');');
+            N2JS::addInline('new N2Classes.SmartSliderWidgetArrowImage("' . $id . '", ' . n2_floatval($params->get(self::$key . 'responsive-desktop')) . ', ' . n2_floatval($params->get(self::$key . 'responsive-tablet')) . ', ' . n2_floatval($params->get(self::$key . 'responsive-mobile')) . ');');
         }
 
         return $html;
@@ -183,27 +175,55 @@ class N2SSPluginWidgetArrowImage extends N2SSPluginWidgetAbstract
         }
 
         if ($imageHover === null) {
-            $image = NHtml::image($image, 'arrow');
+            $image = N2Html::image($image, 'Arrow', array(
+                'class'        => 'n2-ow',
+                'data-no-lazy' => '1',
+                'data-hack' => 'data-lazy-src'
+            ));
         } else {
-            $image = NHtml::image($image, 'arrow', array('class' => 'n2-arrow-normal-img')) . NHtml::image($imageHover, 'arrow', array('class' => 'n2-arrow-hover-img'));
+            $image = N2Html::image($image, 'Arrow', array(
+                    'class'        => 'n2-arrow-normal-img n2-ow',
+                    'data-no-lazy' => '1',
+                    'data-hack' => 'data-lazy-src'
+                )) . N2Html::image($imageHover, 'Arrow', array(
+                    'class'        => 'n2-arrow-hover-img n2-ow',
+                    'data-no-lazy' => '1',
+                    'data-hack' => 'data-lazy-src'
+                ));
+        }
+
+        $label = '';
+        switch ($side) {
+            case 'previous':
+                $label = 'Previous slide';
+                break;
+            case 'next':
+                $label = 'Next slide';
+                break;
         }
 
         if ($animation == 'none' || $animation == 'fade') {
-            return NHtml::tag('div', $displayAttributes + $attributes + array(
+            return N2Html::tag('div', $displayAttributes + $attributes + array(
                     'id'    => $id . '-arrow-' . $side,
-                    'class' => $displayClass . $styleClass . 'nextend-arrow n2-ib nextend-arrow-' . $side . '  nextend-arrow-animated-' . $animation,
-                    'style' => $style
+                    'class' => $displayClass . $styleClass . 'nextend-arrow n2-ib n2-ow nextend-arrow-' . $side . '  nextend-arrow-animated-' . $animation,
+                    'style' => $style,
+                    'role' => 'button',
+                    'aria-label' => $label,
+                    'tabindex' => '0'
                 ), $image);
         }
 
 
-        return NHtml::tag('div', $displayAttributes + $attributes + array(
+        return N2Html::tag('div', $displayAttributes + $attributes + array(
                 'id'    => $id . '-arrow-' . $side,
-                'class' => $displayClass . 'nextend-arrow n2-ib nextend-arrow-animated nextend-arrow-animated-' . $animation . ' nextend-arrow-' . $side,
-                'style' => $style
-            ), NHtml::tag('div', array(
+                'class' => $displayClass . 'nextend-arrow n2-ib nextend-arrow-animated n2-ow nextend-arrow-animated-' . $animation . ' nextend-arrow-' . $side,
+                'style' => $style,
+                'role' => 'button',
+                'aria-label' => $label,
+                'tabindex' => '0'
+            ), N2Html::tag('div', array(
                 'class' => $styleClass . ' n2-resize'
-            ), $image) . NHtml::tag('div', array(
+            ), $image) . N2Html::tag('div', array(
                 'class' => $styleClass . ' n2-active n2-resize'
             ), $image));
     }
@@ -225,8 +245,7 @@ class N2SSPluginWidgetArrowImage extends N2SSPluginWidgetAbstract
 }
 
 
-class N2SSPluginWidgetArrowImageSmallRectangle extends N2SSPluginWidgetArrowImage
-{
+class N2SSPluginWidgetArrowImageSmallRectangle extends N2SSPluginWidgetArrowImage {
 
     var $_name = 'imageSmallRectangle';
 
@@ -243,8 +262,7 @@ class N2SSPluginWidgetArrowImageSmallRectangle extends N2SSPluginWidgetArrowImag
 N2Plugin::addPlugin('sswidgetarrow', 'N2SSPluginWidgetArrowImageSmallRectangle');
 
 
-class N2SSPluginWidgetArrowImageEmpty extends N2SSPluginWidgetArrowImage
-{
+class N2SSPluginWidgetArrowImageEmpty extends N2SSPluginWidgetArrowImage {
 
     var $_name = 'imageEmpty';
 

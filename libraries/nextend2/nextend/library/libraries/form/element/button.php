@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2ElementButton extends N2Element
-{
+class N2ElementButton extends N2Element {
 
     var $_mode = 'hidden';
 
@@ -25,7 +17,7 @@ class N2ElementButton extends N2Element
     function fetchElement() {
 
         $attributes = array(
-            'class'   => 'n2-form-element-single-button n2-button n2-button-big n2-uc n2-button-grey',
+            'class'   => 'n2-form-element-single-button n2-button n2-button-normal n2-radius-s n2-button-l n2-button-grey n2-uc',
             'href'    => '#',
             'onclick' => 'return false;',
             'id'      => $this->_id
@@ -35,6 +27,7 @@ class N2ElementButton extends N2Element
         if (!empty($url)) {
             $attributes['href']   = $url;
             $attributes['target'] = N2XmlHelper::getAttribute($this->_xml, 'target');
+            unset($attributes['onclick']);
         } else {
             $app = (string)$this->_xml->app;
             if ($app) {
@@ -50,6 +43,6 @@ class N2ElementButton extends N2Element
             }
         }
 
-        return NHtml::tag('a', $attributes, n2_($this->getValue()));
+        return N2Html::tag('a', $attributes, n2_($this->getValue()));
     }
 }

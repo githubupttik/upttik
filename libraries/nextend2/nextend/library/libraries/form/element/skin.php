@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 N2Loader::import('libraries.form.element.list');
 
 class N2ElementSkin extends N2ElementList
@@ -21,7 +14,7 @@ class N2ElementSkin extends N2ElementList
 
         $html = parent::fetchElement();
 
-        N2JS::addInline('new NextendElementSkin("' . $this->_id . '", "' . str_replace($this->_name, '', $this->_id) . '", ' . json_encode($this->skins) . ', ' . json_encode($this->fixedMode) . ');');
+        N2JS::addInline('new N2Classes.FormElementSkin("' . $this->_id . '", "' . str_replace($this->_name, '', $this->_id) . '", ' . json_encode($this->skins) . ', ' . json_encode($this->fixedMode) . ');');
 
         return $html;
     }

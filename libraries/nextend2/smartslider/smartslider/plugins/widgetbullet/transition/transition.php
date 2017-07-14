@@ -1,17 +1,9 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
 N2Loader::import('libraries.plugins.N2SliderWidgetAbstract', 'smartslider');
 N2Loader::import('libraries.image.color');
 
-class N2SSPluginWidgetBulletTransition extends N2SSPluginWidgetAbstract
-{
+class N2SSPluginWidgetBulletTransition extends N2SSPluginWidgetAbstract {
 
     var $_name = 'transition';
 
@@ -51,6 +43,7 @@ class N2SSPluginWidgetBulletTransition extends N2SSPluginWidgetAbstract
             self::$key . 'position-',
             'bullet'
         );
+
         return $positions;
     }
 
@@ -63,8 +56,11 @@ class N2SSPluginWidgetBulletTransition extends N2SSPluginWidgetAbstract
      */
     static function render($slider, $id, $params) {
 
-        N2JS::addFile(N2Filesystem::translate(dirname(__FILE__) . '/transition/bullet.js'), $id);
-        N2CSS::addFile(N2Filesystem::translate(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'transition' . DIRECTORY_SEPARATOR . 'style.css'), $id);
+        N2LESS::addFile(N2Filesystem::translate(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'transition' . DIRECTORY_SEPARATOR . 'style.n2less'), $slider->cacheId, array(
+            "sliderid" => $slider->elementId
+        ), NEXTEND_SMARTSLIDER_ASSETS . '/less' . NDS);
+        N2JS::addFile(N2Filesystem::translate(dirname(__FILE__) . '/transition/bullet.min.js'), $id);
+    
 
         list($displayClass, $displayAttributes) = self::getDisplayAttributes($params, self::$key);
 
@@ -77,18 +73,19 @@ class N2SSPluginWidgetBulletTransition extends N2SSPluginWidgetAbstract
         $dots = array();
         $i    = 1;
         foreach ($slider->slides AS $slide) {
-            $dots[] = NHtml::tag('div', array(
-                'class' => $bulletStyle . ($slide->isActive() ? 'n2-active' : ''),
+            $dots[] = N2Html::tag('div', array(
+                'class'    => 'n2-ow ' . $bulletStyle . ($slide->isActive() ? 'n2-active' : ''),
+                'tabindex' => '0'
             ), '');
 
             $i++;
         }
 
         $orientation = self::getOrientationByPosition($params->get(self::$key . 'position-mode'), $params->get(self::$key . 'position-area'), $params->get(self::$key . 'orientation'));
-        if($orientation == 'auto'){
+        if ($orientation == 'auto') {
             $orientation = 'horizontal';
         }
-        $html        = '';
+        $html = '';
         switch ($orientation) {
             case 'vertical':
                 $html .= implode('<br>', $dots);
@@ -132,15 +129,15 @@ class N2SSPluginWidgetBulletTransition extends N2SSPluginWidgetAbstract
         $parameters['action']     = $params->get(self::$key . 'action');
         $parameters['numeric']    = 0;
 
-        N2JS::addInline('new NextendSmartSliderWidgetBulletTransition("' . $id . '", ' . json_encode($parameters) . ');');
+        N2JS::addInline('new N2Classes.SmartSliderWidgetBulletTransition("' . $id . '", ' . json_encode($parameters) . ');');
 
         $fullSize = intval($params->get(self::$key . 'bar-full-size'));
         if ($fullSize) {
             $displayClass .= "n2-bullet-bar-full-size ";
         }
 
-        return NHtml::tag("div", $displayAttributes + $attributes + array(
-                "class" => $displayClass . $barStyle . "nextend-bullet-bar nextend-bullet-bar-" . $orientation,
+        return N2Html::tag("div", $displayAttributes + $attributes + array(
+                "class" => $displayClass . $barStyle . "nextend-bullet-bar n2-ib n2-ow nextend-bullet-bar-" . $orientation,
                 "style" => "text-align: " . $params->get(self::$key . 'align') . ";" . $style
             ), $html);
     }

@@ -1,14 +1,6 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 
-class N2ModelsLink
-{
+class N2ModelsLink {
 
     public static function search($keyword) {
 
@@ -27,7 +19,8 @@ class N2ModelsLink
         $query->from('#__content AS a');
 
         // Join over the categories.
-        $query->select('c.title AS category_title')->join('LEFT', '#__categories AS c ON c.id = a.catid');
+        $query->select('c.title AS category_title')
+              ->join('LEFT', '#__categories AS c ON c.id = a.catid');
 
         if (!empty($keyword)) {
             if (stripos($keyword, 'id:') === 0) {
@@ -57,10 +50,21 @@ class N2ModelsLink
         $db = JFactory::getDbo();
         $db->setQuery('SELECT * FROM #__menu WHERE title LIKE ' . $db->quote('%' . str_replace(' ', '%', $db->escape(trim($keyword), true) . '%')) . ' AND client_id = 0 AND menutype != "" LIMIT 0,10');
         $menuItems = $db->loadAssocList();
+
         foreach ($menuItems AS $mi) {
+            $link = $mi['link'];
+            if ($link && strpos($link, 'index.php') === 0) {
+                $link = 'index.php?Itemid=' . $mi['id'];
+
+                if (isset($mi['language'])) {
+                    $link .= self::getLangauge($mi['language']);
+                }
+            }
+
+
             $result[] = array(
                 'title' => $mi['title'] . ' [' . $mi['menutype'] . ']',
-                'link'  => $mi['link'],
+                'link'  => $link,
                 'info'  => n2_('Menu item')
             );
         }
@@ -68,5 +72,29 @@ class N2ModelsLink
             return self::_search();
         }
         return $result;
+    }
+
+    private static function getLangauge($language) {
+        $db    = JFactory::getDBO();
+        $query = $db->getQuery(true);
+
+        $link = '';
+
+        if (is_object($query)) {
+            $query->select('a.sef AS sef');
+            $query->select('a.lang_code AS lang_code');
+            $query->from('#__languages AS a');
+            $db->setQuery($query);
+            $langs = $db->loadObjectList();
+
+            foreach ($langs as $lang) {
+                if ($language == $lang->lang_code) {
+                    $language = $lang->sef;
+                    $link .= '&lang=' . $language;
+                }
+            }
+        }
+
+        return $link;
     }
 }

@@ -1,11 +1,4 @@
 <?php
-/**
-* @author    Roland Soos
-* @copyright (C) 2015 Nextendweb.com
-* @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
-**/
-defined('_JEXEC') or die('Restricted access');
-?><?php
 N2Loader::import('libraries.form.element.hidden');
 
 class N2ElementSwitcher extends N2ElementHidden
@@ -26,7 +19,7 @@ class N2ElementSwitcher extends N2ElementHidden
             $value           = (string)$unit->attributes()->value;
             $values[] = $value;
 
-            $html .= NHtml::tag('div', array(
+            $html .= N2Html::tag('div', array(
                 'class' => 'n2-switcher-unit n2-h5 n2-uc ' . ($value == $currentValue ? 'n2-active ' : '') . ($i == 0 ? 'n2-first ' : '') . ($i == $units ? 'n2-last ' : '')
             ), n2_((string)$unit));
             $i++;
@@ -36,7 +29,7 @@ class N2ElementSwitcher extends N2ElementHidden
 
         $html .= "</div>";
 
-        N2JS::addInline('new NextendElementSwitcher("' . $this->_id . '", ' . json_encode($values) . ');');
+        N2JS::addInline('new N2Classes.FormElementSwitcher("' . $this->_id . '", ' . json_encode($values) . ');');
 
         return $html;
     }
