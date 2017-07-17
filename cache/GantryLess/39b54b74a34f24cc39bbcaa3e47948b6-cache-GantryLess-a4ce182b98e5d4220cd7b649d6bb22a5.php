@@ -1,4 +1,4 @@
-<?php die("Access Denied"); ?>#x#s:28797:"s:28786:"a:4:{s:4:"root";s:60:"C:/xampp/htdocs/upttik/templates/jd_newjersey/less/menu.less";s:8:"compiled";s:27593:".clearfix {
+<?php die("Access Denied"); ?>#x#s:28801:"s:28790:"a:4:{s:4:"root";s:60:"C:/xampp/htdocs/upttik/templates/jd_newjersey/less/menu.less";s:8:"compiled";s:27597:".clearfix {
   *zoom: 1;
 }
 .clearfix:before,
@@ -275,7 +275,7 @@
   border-radius: 4px;
   background: none;
   position: absolute;
-  z-index: 2;
+  z-index: 21000;
   top: 10px;
   left: 10px;
   cursor: pointer;
@@ -1014,4 +1014,4 @@ body .gf-menu-device-container-wrapper .gf-menu li:hover .dropdown,
 body .gf-menu-device-container-wrapper .gf-menu li.active li.active:hover .dropdown {
   transform: translate3d(0%,0%,0px) !important;
 }
-";s:5:"files";a:11:{s:60:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\menu.less";i:1500007133;s:65:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\variables.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\mixins.less";i:1500007012;s:68:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\index.less";i:1500007133;s:81:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\mixins.less";i:1500007133;s:84:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\utilities.less";i:1500007133;s:84:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\dropdowns.less";i:1500007133;s:82:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\popover.less";i:1500007133;s:82:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\buttons.less";i:1500007133;s:65:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\menu-dark.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\menu-hovers.less";i:1500007133;}s:7:"updated";i:1500017546;}";";
+";s:5:"files";a:11:{s:60:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\menu.less";i:1500259790;s:65:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\variables.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\mixins.less";i:1500007012;s:68:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\index.less";i:1500007133;s:81:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\mixins.less";i:1500007133;s:84:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\utilities.less";i:1500007133;s:84:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\dropdowns.less";i:1500007133;s:82:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\popover.less";i:1500007133;s:82:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\buttons.less";i:1500007133;s:65:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\menu-dark.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\menu-hovers.less";i:1500007133;}s:7:"updated";i:1500259796;}";";
