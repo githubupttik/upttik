@@ -424,7 +424,7 @@ $templateName = $app->getTemplate();
 				<div class="module-surround">
 					<div class="module-content">
 						<div class="custom center wow zoomIn">
-							<p>&copy; <?php echo date('Y'); ?> <strong style="text-transform:capitalize;"><?php echo $sitename; ?></strong><a href="https://www.joomdev.com/products/templates" target="_blank"> Joomla Template</a> by <a href="http://www.joomdev.com" target="_blank">JoomDev</a></p>
+							<p>&copy; <?php echo date('Y'); ?> <strong style="text-transform:capitalize;"><?php echo $sitename; ?></strong></p>
 						</div>
 					</div>
 				</div>
