@@ -12,3 +12,4 @@
 2017-07-14T06:39:21+00:00	INFO ::1	joomlafailure	Username and password do not match or you do not have an account yet.
 2017-07-14T06:39:25+00:00	INFO ::1	joomlafailure	Username and password do not match or you do not have an account yet.
 2017-07-14T06:39:49+00:00	INFO ::1	joomlafailure	Username and password do not match or you do not have an account yet.
+2017-07-17T06:16:40+00:00	INFO 192.168.6.53	joomlafailure	Empty password not allowed.
