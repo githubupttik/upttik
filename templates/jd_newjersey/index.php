@@ -88,7 +88,7 @@ $templateName = $app->getTemplate();
 		<div class="wow fadeIn" id="rt-top" <?php echo $gantry->displayClassesByTag('rt-top');?>>
 		<?php } ?>
 			<div class="rt-container">
-				<?php echo $gantry->displayModules('top','standard','standard'); ?>
+				<img src="logo.png"/><?php echo $gantry->displayModules('top','standard','standard'); ?>
 				<div class="clear"></div>
 			</div>
 		</div>
@@ -101,7 +101,7 @@ $templateName = $app->getTemplate();
 				<div class="wow fadeIn" id="rt-header">
 		<?php } ?>
 		<div class="rt-container">
-				<img src="logo.png"/><?php echo $gantry->displayModules('header','standard','standard'); ?>
+				<?php echo $gantry->displayModules('header','standard','standard'); ?>
 				<div class="clear"></div>
 			</div>
 		</div>
