@@ -83,12 +83,12 @@ $templateName = $app->getTemplate();
     <header id="rt-top-surround">
 		<?php if ($gantry->countModules('top')) : ?>
 		<?php if($positionTopbg != 'transparent') { ?>
-		<div class="wow fadeIn" id="rt-top" <?php echo $gantry->displayClassesByTag('rt-top');?> style="background:<?php echo $positionTopbg;?> no-repeat center top; background-size:cover;">
+		<img src="templates/jd_newjersey/logo.png"/><div class="wow fadeIn" id="rt-top" <?php echo $gantry->displayClassesByTag('rt-top');?> style="background:<?php echo $positionTopbg;?> no-repeat center top; background-size:cover;">
 		<?php } else { ?>
 		<div class="wow fadeIn" id="rt-top" <?php echo $gantry->displayClassesByTag('rt-top');?>>
 		<?php } ?>
 			<div class="rt-container">
-				<img src="logo.png"/><?php echo $gantry->displayModules('top','standard','standard'); ?>
+				<?php echo $gantry->displayModules('top','standard','standard'); ?>
 				<div class="clear"></div>
 			</div>
 		</div>
