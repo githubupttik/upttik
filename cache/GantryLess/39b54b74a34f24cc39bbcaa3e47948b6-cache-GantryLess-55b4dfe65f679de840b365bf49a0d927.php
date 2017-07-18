@@ -1,4 +1,4 @@
-<?php die("Access Denied"); ?>#x#s:133047:"s:133035:"a:4:{s:4:"root";s:62:"C:/xampp/htdocs/upttik/templates/jd_newjersey/less/global.less";s:8:"compiled";s:130327:".clearfix {
+<?php die("Access Denied"); ?>#x#s:133049:"s:133037:"a:4:{s:4:"root";s:62:"C:/xampp/htdocs/upttik/templates/jd_newjersey/less/global.less";s:8:"compiled";s:130329:".clearfix {
   *zoom: 1;
 }
 .clearfix:before,
@@ -1985,7 +1985,7 @@ body .badge {
 }
 #rt-header .rt-block.jd-search {
   margin: 0;
-  margin-top: 100px;
+  margin-top: 5%;
   padding: 0;
 }
 #rt-header .rt-block.jd-search .search {
@@ -2980,7 +2980,7 @@ ul.pagination li:hover a {
 #jd-position-2 {
   padding: 40px 0;
   background-size: cover;
-  background: url(../images/position2-bg.jpg) no-repeat center top;
+  background: url(../images/position2-bg.jpg) repeat center top;
 }
 #jd-position-2 .module-title h2.title {
   color: #fff;
@@ -3473,8 +3473,8 @@ ul {
     float: none;
     margin: 10px 0;
   }
-  #rt-header .rt-block.jd-search .search {
-    float: none;
+  rt-header .rt-block.jd-search .search {
+    float: right;
     margin: 0 auto;
     width: 250px;
   }
@@ -3490,10 +3490,10 @@ ul {
   #rt-top .rt-container {
     padding: 20px 0;
   }
-  ul.top-address-bar {
+  #	ul.top-address-bar {
     display: none;
   }
-  .rt-block .jd-search {
+  #	.rt-block .jd-search {
     display: none;
   }
   .sub-desc {
@@ -3665,7 +3665,7 @@ ul {
   }
 }
 @media screen and (max-width: 959px) {
-  .top-address-bar {
+  #.top-address-bar {
     text-align: left;
   }
 }
@@ -3676,7 +3676,7 @@ ul {
   #rt-top .rt-container > div {
     width: 100%;
   }
-  #rt-top .top-address-bar {
+  #rt-top #.top-address-bar {
     display: inline-block;
     float: none;
   }
@@ -3704,7 +3704,7 @@ ul {
   .rt-block.menu-block {
     display: none;
   }
-  .rt-block .jd-search {
+  #.rt-block .jd-search {
     display: none;
   }
 }
@@ -3714,7 +3714,7 @@ ul {
   }
 }
 @media screen and (max-width: 1024px) {
-  .top-address-bar li {
+  #.top-address-bar li {
     padding: 22px 10px 10px;
   }
 }
@@ -6525,4 +6525,4 @@ body .cart_quickcart input[type="text"] {
   height: auto;
   line-height: inherit;
 }
-";s:5:"files";a:27:{s:62:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\global.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\mixins.less";i:1500007012;s:65:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\variables.less";i:1500007133;s:68:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\index.less";i:1500007133;s:81:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\mixins.less";i:1500007133;s:84:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\utilities.less";i:1500007133;s:84:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\dropdowns.less";i:1500007133;s:82:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\popover.less";i:1500007133;s:82:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\buttons.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\gantry-core.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\joomla-core.less";i:1500007133;s:64:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\template.less";i:1500283522;s:61:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\style.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\header-dark.less";i:1500007133;s:86:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\font-awesome.less";i:1500007012;s:83:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\variables.less";i:1500007012;s:80:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\mixins.less";i:1500007012;s:78:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\path.less";i:1500007012;s:78:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\core.less";i:1500007012;s:83:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\bootstrap.less";i:1500007012;s:80:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\extras.less";i:1500007012;s:79:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\icons.less";i:1500007012;s:65:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\utilities.less";i:1500007133;s:64:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\prettify.less";i:1500007133;s:63:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\offline.less";i:1500007133;s:61:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\error.less";i:1500007133;s:80:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\bootstrap-overrides.less";i:1500007012;}s:7:"updated";i:1500283544;}";";
+";s:5:"files";a:27:{s:62:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\global.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\mixins.less";i:1500007012;s:65:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\variables.less";i:1500007133;s:68:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\index.less";i:1500007133;s:81:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\mixins.less";i:1500007133;s:84:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\utilities.less";i:1500007133;s:84:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\dropdowns.less";i:1500007133;s:82:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\popover.less";i:1500007133;s:82:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\buttons.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\gantry-core.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\joomla-core.less";i:1500007133;s:64:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\template.less";i:1500349286;s:61:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\style.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\header-dark.less";i:1500007133;s:86:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\font-awesome.less";i:1500007012;s:83:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\variables.less";i:1500007012;s:80:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\mixins.less";i:1500007012;s:78:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\path.less";i:1500007012;s:78:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\core.less";i:1500007012;s:83:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\bootstrap.less";i:1500007012;s:80:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\extras.less";i:1500007012;s:79:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\font-awesome\icons.less";i:1500007012;s:65:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\utilities.less";i:1500007133;s:64:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\prettify.less";i:1500007133;s:63:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\offline.less";i:1500007133;s:61:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\error.less";i:1500007133;s:80:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\bootstrap-overrides.less";i:1500007012;}s:7:"updated";i:1500349292;}";";
