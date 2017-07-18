@@ -88,7 +88,7 @@ $templateName = $app->getTemplate();
 		<div class="wow fadeIn" id="rt-top" <?php echo $gantry->displayClassesByTag('rt-top');?>>
 		<?php } ?>
 			<div class="rt-container">
-				<center><table><tr><td><img src="templates/jd_newjersey/logo.png" width="80px" height="auto"/></td><td><?php echo $gantry->displayModules('top','standard','standard'); ?></td></tr></table></center>
+				<?php echo $gantry->displayModules('top','standard','standard'); ?>
 				<div class="clear"></div>
 			</div>
 		</div>
