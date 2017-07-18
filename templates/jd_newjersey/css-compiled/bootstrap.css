@@ -50,11 +50,17 @@ sub {
 img {
   max-width: 100%;
   width: auto \9;
-  height: auto;
+ # height: auto;
   vertical-align: middle;
   border: 0;
   -ms-interpolation-mode: bicubic;
+  
 }
+
+.overlay-img > img {
+	height: 250px;
+}
+
 #map_canvas img {
   max-width: none;
 }
