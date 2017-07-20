@@ -228,7 +228,7 @@
   padding: 3px 0;
 }
 .gf-menu .dropdown .grouped ol > li > .item {
-  font-size: 20px;
+  font-size: 12px;
   padding-top: 3px;
   padding-bottom: 3px;
 }
@@ -1014,4 +1014,4 @@ body .gf-menu-device-container-wrapper .gf-menu li:hover .dropdown,
 body .gf-menu-device-container-wrapper .gf-menu li.active li.active:hover .dropdown {
   transform: translate3d(0%,0%,0px) !important;
 }
-";s:5:"files";a:11:{s:60:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\menu.less";i:1500259790;s:65:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\variables.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\mixins.less";i:1500007012;s:68:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\index.less";i:1500007133;s:81:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\mixins.less";i:1500007133;s:84:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\utilities.less";i:1500007133;s:84:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\dropdowns.less";i:1500007133;s:82:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\popover.less";i:1500007133;s:82:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\buttons.less";i:1500007133;s:65:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\menu-dark.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\menu-hovers.less";i:1500007133;}s:7:"updated";i:1500259796;}";";
+";s:5:"files";a:11:{s:60:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\menu.less";i:1500533868;s:65:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\variables.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\libraries\gantry\assets\jui\less\mixins.less";i:1500007012;s:68:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\index.less";i:1500007133;s:81:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\mixins.less";i:1500007133;s:84:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\utilities.less";i:1500007133;s:84:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\dropdowns.less";i:1500007133;s:82:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\popover.less";i:1500007133;s:82:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mixins\rockettheme\buttons.less";i:1500007133;s:65:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\menu-dark.less";i:1500007133;s:67:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\menu-hovers.less";i:1500007133;}s:7:"updated";i:1500533887;}";";
