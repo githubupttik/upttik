@@ -104,10 +104,10 @@ class JDocumentRendererHtmlHead extends JDocumentRenderer
 		// Don't add empty generators
 		$generator = $document->getGenerator();
 
-		if ($generator)
-		{
-			$buffer .= $tab . '<meta name="generator" content="' . htmlspecialchars($generator, ENT_COMPAT, 'UTF-8') . '" />' . $lnEnd;
-		}
+		//if ($generator)
+		//{
+		//	$buffer .= $tab . '<meta name="generator" content="' . htmlspecialchars($generator, ENT_COMPAT, 'UTF-8') . '" />' . $lnEnd;
+		//}
 
 		$buffer .= $tab . '<title>' . htmlspecialchars($document->getTitle(), ENT_COMPAT, 'UTF-8') . '</title>' . $lnEnd;
 
