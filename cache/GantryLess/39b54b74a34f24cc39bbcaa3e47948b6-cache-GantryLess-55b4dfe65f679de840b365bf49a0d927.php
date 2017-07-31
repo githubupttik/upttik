@@ -2342,6 +2342,7 @@ body div.k2ItemsBlock .overlay-image-wrapper .overlay-img img {
   transition: opacity 0.35s, transform 0.35s;
   -webkit-transform: scale(1.12);
   transform: scale(1.12);
+  height 250px;
 }
 body div.k2ItemsBlock .overlay-image-wrapper .overlay-img:hover img {
   opacity: 1;
