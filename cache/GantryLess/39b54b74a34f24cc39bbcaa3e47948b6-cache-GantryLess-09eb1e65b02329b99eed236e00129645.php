@@ -186,4 +186,4 @@
     padding-top: 0;
   }
 }
-";s:5:"files";a:1:{s:68:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mediaqueries.less";i:1500007133;}s:7:"updated";i:1500007154;}";";
+";s:5:"files";a:1:{s:68:"C:\xampp\htdocs\upttik\templates\jd_newjersey\less\mediaqueries.less";i:1501470831;}s:7:"updated";i:1501470886;}";";
