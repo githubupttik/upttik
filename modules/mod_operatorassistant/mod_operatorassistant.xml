@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="2.5.0" client="site" method="upgrade">
+    <name>Operator Assistant</name>
+    <author>Valerio Finazzo</author>
+    <creationDate>Febbraio 2015</creationDate>
+    <authorEmail>valerio.finazzo@gmail.com</authorEmail>
+    <authorUrl>www.valeriofinazzo.it</authorUrl>
+    <version>1.1.1</version>
+    <license>http://www.gnu.org/licenses/gpl-2.0.html</license>
+    <files>
+        <folder>tmpl</folder>
+        <folder>assets</folder>
+        <folder>language</folder>
+        <filename module="mod_operatorassistant">mod_operatorassistant.php</filename>
+        <filename>mod_operatorassistant.xml</filename>
+        <filename>index.html</filename>
+    </files>
+    <config>
+        <fields name="params">
+          <fieldset name="basic">
+              <field name="type" type="radio" default="chat" label="tipo modulo">
+                  <option value="client">client</option>
+                  <option value="operator">operator</option>
+              </field>
+              <field name="logo" type="string" default="modules/mod_operatorassistant/assets/img/receptionist.png" label="Immagine" />
+          </fieldset>
+        </fields>
+    </config>
+</extension>

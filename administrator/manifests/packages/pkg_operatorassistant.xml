@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<extension type="package" version="1.6">
+<name>Operator Assistant Package</name>
+<version>1.1.3</version>
+<creationDate>Maggio 2016</creationDate>
+<license>http://www.gnu.org/licenses/gpl-2.0.html</license>
+<packagename>operatorassistant</packagename>
+<author>Valerio Finazzo</author>
+<url>http://www.valeriofinazzo.it/</url>
+<files folder="packages">
+  <file type="component" id="com_operatorassistant" >com_operatorassistant.zip</file>
+  <file type="module" id="mod_operatorassistant" client="site">mod_operatorassistant.zip</file>
+</files>
+</extension>

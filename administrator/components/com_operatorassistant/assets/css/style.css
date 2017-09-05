@@ -1,0 +1,25 @@
+/* Impostiamo lo stile di base di tutti i testi */
+
+div, input, select, textarea
+{
+    color: #000000;
+    font: normal 10px verdana;
+}
+
+/* Impostiamo visualizzazione e ritorno a capo alle descrizioni */
+
+label
+{
+    display: block;
+    float: left;
+    width: 150px;
+}
+
+/* Impostiamo larghezza, margini e bordo ai div contenuti nel form */
+
+form div
+{
+    width: 400px;
+    padding: 0px 0px 5px 0px;
+    margin: 0px 0px 10px 0px;
+}
